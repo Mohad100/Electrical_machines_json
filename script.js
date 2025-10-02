@@ -64,11 +64,19 @@ async function initializeApp() {
     showView('topicSelector');
     renderMath();
     
-    const savedTheme = localStorage.getItem('theme');
+    // Initialize theme from localStorage or default to dark
+    const savedTheme = localStorage.getItem('theme') || 'dark';
     if (savedTheme === 'light') {
-        document.body.classList.remove('dark-theme');
+        document.documentElement.classList.remove('dark');
+        document.body.classList.remove('dark');
         if (elements.themeToggle) {
             elements.themeToggle.querySelector('.theme-icon').textContent = '☀️';
+        }
+    } else {
+        document.documentElement.classList.add('dark');
+        document.body.classList.add('dark');
+        if (elements.themeToggle) {
+            elements.themeToggle.querySelector('.theme-icon').textContent = '🌙';
         }
     }
 }
@@ -89,10 +97,23 @@ function setupEventListeners() {
 }
 
 function toggleTheme() {
-    document.body.classList.toggle('dark-theme');
-    const isDark = document.body.classList.contains('dark-theme');
-    elements.themeToggle.querySelector('.theme-icon').textContent = isDark ? '🌙' : '☀️';
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    const html = document.documentElement;
+    const body = document.body;
+    const isDark = html.classList.contains('dark');
+    
+    if (isDark) {
+        // Switch to light mode
+        html.classList.remove('dark');
+        body.classList.remove('dark');
+        elements.themeToggle.querySelector('.theme-icon').textContent = '☀️';
+        localStorage.setItem('theme', 'light');
+    } else {
+        // Switch to dark mode
+        html.classList.add('dark');
+        body.classList.add('dark');
+        elements.themeToggle.querySelector('.theme-icon').textContent = '🌙';
+        localStorage.setItem('theme', 'dark');
+    }
 }
 
 function showView(viewName) {

@@ -39,25 +39,33 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.0/katex.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.0/contrib/auto-render.min.js"></script>
     <style>
-        /* Custom icon colors */
-        .icon-dc { color: #ef4444; text-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
-        .icon-ac { color: #3b82f6; text-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
-        .icon-transformer { color: #8b5cf6; text-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
-        .icon-practical { color: #f59e0b; text-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
-        .icon-threephase { color: #10b981; text-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
-        .icon-generator { color: #eab308; text-shadow: 0 0 20px rgba(234, 179, 8, 0.3); }
+        /* Custom icon colors - responsive to light/dark mode */
+        .icon-dc { color: #f43f5e; text-shadow: 0 0 20px rgba(244, 63, 94, 0.4); }
+        .icon-ac { color: #06b6d4; text-shadow: 0 0 20px rgba(6, 182, 212, 0.4); }
+        .icon-transformer { color: #8b5cf6; text-shadow: 0 0 20px rgba(139, 92, 246, 0.4); }
+        .icon-practical { color: #f97316; text-shadow: 0 0 20px rgba(249, 115, 22, 0.4); }
+        .icon-threephase { color: #14b8a6; text-shadow: 0 0 20px rgba(20, 184, 166, 0.4); }
+        .icon-generator { color: #f59e0b; text-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
+        
+        /* Dark mode icon adjustments */
+        .dark .icon-dc { color: #fb7185; }
+        .dark .icon-ac { color: #22d3ee; }
+        .dark .icon-transformer { color: #a78bfa; }
+        .dark .icon-practical { color: #fb923c; }
+        .dark .icon-threephase { color: #2dd4bf; }
+        .dark .icon-generator { color: #fbbf24; }
     </style>
 </head>
-<body class="dark-theme dark bg-gray-900 text-gray-100 transition-colors duration-300">
+<body class="dark bg-gray-900 dark:bg-gray-900 bg-gray-50 text-gray-900 dark:text-gray-100 transition-colors duration-300">
     <!-- Header -->
-    <header class="sticky top-0 z-50 bg-gray-800/95 backdrop-blur-sm border-b border-gray-700/50 shadow-lg">
+    <header class="sticky top-0 z-50 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700/50 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2">
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text text-transparent flex items-center gap-2">
                     <span class="text-3xl animate-pulse-slow">⚡</span>
                     Electrical Machines Course
                 </h1>
-                <button id="themeToggle" class="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors duration-200" aria-label="Toggle theme">
+                <button id="themeToggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200" aria-label="Toggle theme">
                     <span class="theme-icon text-2xl">🌙</span>
                 </button>
             </div>
@@ -70,29 +78,29 @@
             <!-- Topic Selector View -->
             <div id="topicSelector" class="view active">
                 <!-- Hero Section -->
-                <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-1 mb-16 shadow-2xl">
-                    <div class="bg-gray-900 rounded-3xl p-12 sm:p-16 text-center">
+                <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-1 mb-16 shadow-2xl">
+                    <div class="bg-white dark:bg-gray-900 rounded-3xl p-12 sm:p-16 text-center">
                         <div class="icon-generator text-8xl mb-6 animate-float inline-block">⚡</div>
-                        <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold mb-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
                             Electrical Machines
                         </h1>
-                        <p class="text-xl sm:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto">
+                        <p class="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto">
                             Master the fundamentals of electrical machines with comprehensive lessons, interactive quizzes, and practical exercises
                         </p>
                         
                         <!-- Stats -->
                         <div class="grid grid-cols-3 gap-4 sm:gap-8 max-w-2xl mx-auto">
-                            <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 hover:transform hover:scale-105">
-                                <div class="text-4xl sm:text-5xl font-bold text-blue-400 mb-2">6</div>
-                                <div class="text-sm sm:text-base text-gray-400">Topics</div>
+                            <div class="bg-indigo-50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-indigo-200 dark:border-gray-700/50 hover:border-indigo-400 dark:hover:border-indigo-500/50 transition-all duration-300 hover:transform hover:scale-105">
+                                <div class="text-4xl sm:text-5xl font-bold text-indigo-600 dark:text-indigo-400 mb-2">6</div>
+                                <div class="text-sm sm:text-base text-gray-600 dark:text-gray-400">Topics</div>
                             </div>
-                            <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 hover:transform hover:scale-105">
-                                <div class="text-4xl sm:text-5xl font-bold text-purple-400 mb-2">20</div>
-                                <div class="text-sm sm:text-base text-gray-400">Quizzes</div>
+                            <div class="bg-purple-50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-purple-200 dark:border-gray-700/50 hover:border-purple-400 dark:hover:border-purple-500/50 transition-all duration-300 hover:transform hover:scale-105">
+                                <div class="text-4xl sm:text-5xl font-bold text-purple-600 dark:text-purple-400 mb-2">20</div>
+                                <div class="text-sm sm:text-base text-gray-600 dark:text-gray-400">Quizzes</div>
                             </div>
-                            <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-pink-500/50 transition-all duration-300 hover:transform hover:scale-105">
-                                <div class="text-4xl sm:text-5xl font-bold text-pink-400 mb-2">18</div>
-                                <div class="text-sm sm:text-base text-gray-400">Exercises</div>
+                            <div class="bg-pink-50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-pink-200 dark:border-gray-700/50 hover:border-pink-400 dark:hover:border-pink-500/50 transition-all duration-300 hover:transform hover:scale-105">
+                                <div class="text-4xl sm:text-5xl font-bold text-pink-600 dark:text-pink-400 mb-2">18</div>
+                                <div class="text-sm sm:text-base text-gray-600 dark:text-gray-400">Exercises</div>
                             </div>
                         </div>
                     </div>
@@ -102,29 +110,29 @@
                 <div class="mb-12">
                     <h2 class="text-4xl font-bold mb-8 flex items-center gap-3">
                         <span>📚</span>
-                        <span class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Course Topics</span>
+                        <span class="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">Course Topics</span>
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <!-- DC Motors Card -->
-                        <div class="topic-card group relative bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-red-500/50 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-red-500/20" data-topic="dc-motors">
-                            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 to-red-600 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="topic-card group relative bg-white dark:bg-gray-800 rounded-2xl p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-rose-400 dark:hover:border-rose-500/50 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-rose-500/20 shadow-lg" data-topic="dc-motors">
+                            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 to-pink-500 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <div class="icon-dc text-6xl mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12">⊕</div>
-                            <h3 class="text-2xl font-bold mb-3 text-gray-100">DC Motors</h3>
-                            <p class="text-gray-400 mb-4 leading-relaxed">Master DC motor principles, EMF equations, types (Series, Shunt, Compound), speed control, and efficiency analysis</p>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-gray-100">DC Motors</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">Master DC motor principles, EMF equations, types (Series, Shunt, Compound), speed control, and efficiency analysis</p>
                             <div class="flex gap-2 mb-4">
-                                <span class="px-3 py-1 bg-red-500/10 text-red-400 rounded-full text-sm border border-red-500/20">3 Quizzes</span>
-                                <span class="px-3 py-1 bg-red-500/10 text-red-400 rounded-full text-sm border border-red-500/20">3 Exercises</span>
+                                <span class="px-3 py-1 bg-rose-100 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded-full text-sm border border-rose-300 dark:border-rose-500/20">3 Quizzes</span>
+                                <span class="px-3 py-1 bg-rose-100 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded-full text-sm border border-rose-300 dark:border-rose-500/20">3 Exercises</span>
                             </div>
                             <div class="grid grid-cols-3 gap-2">
-                                <button onclick="selectTopic('dc-motors', 'explain')" class="flex flex-col items-center gap-1 p-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 group/btn" title="Learn the theory">
+                                <button onclick="selectTopic('dc-motors', 'explain')" class="flex flex-col items-center gap-1 p-3 bg-indigo-500 hover:bg-indigo-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md" title="Learn the theory">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">📖</span>
                                     <span class="text-sm font-medium">Learn</span>
                                 </button>
-                                <button onclick="selectTopic('dc-motors', 'quiz')" class="flex flex-col items-center gap-1 p-3 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors duration-200 group/btn" title="Test your knowledge">
+                                <button onclick="selectTopic('dc-motors', 'quiz')" class="flex flex-col items-center gap-1 p-3 bg-purple-500 hover:bg-purple-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md" title="Test your knowledge">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">✏️</span>
                                     <span class="text-sm font-medium">Quiz</span>
                                 </button>
-                                <button onclick="selectTopic('dc-motors', 'exercises')" class="flex flex-col items-center gap-1 p-3 bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200 group/btn" title="Practice problems">
+                                <button onclick="selectTopic('dc-motors', 'exercises')" class="flex flex-col items-center gap-1 p-3 bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md" title="Practice problems">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">🎯</span>
                                     <span class="text-sm font-medium">Practice</span>
                                 </button>
@@ -132,25 +140,25 @@
                         </div>
 
                         <!-- AC Motors Card -->
-                        <div class="topic-card group relative bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-blue-500/50 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20" data-topic="ac-motors">
-                            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="topic-card group relative bg-white dark:bg-gray-800 rounded-2xl p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-cyan-400 dark:hover:border-cyan-500/50 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/20 shadow-lg" data-topic="ac-motors">
+                            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <div class="icon-ac text-6xl mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12">∿</div>
-                            <h3 class="text-2xl font-bold mb-3 text-gray-100">AC Motors</h3>
-                            <p class="text-gray-400 mb-4 leading-relaxed">Explore induction motors, synchronous motors, rotating magnetic field, slip, torque-slip characteristics, and speed control</p>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-gray-100">AC Motors</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">Explore induction motors, synchronous motors, rotating magnetic field, slip, torque-slip characteristics, and speed control</p>
                             <div class="flex gap-2 mb-4">
-                                <span class="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full text-sm border border-blue-500/20">3 Quizzes</span>
-                                <span class="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full text-sm border border-blue-500/20">3 Exercises</span>
+                                <span class="px-3 py-1 bg-cyan-100 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 rounded-full text-sm border border-cyan-300 dark:border-cyan-500/20">3 Quizzes</span>
+                                <span class="px-3 py-1 bg-cyan-100 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 rounded-full text-sm border border-cyan-300 dark:border-cyan-500/20">3 Exercises</span>
                             </div>
                             <div class="grid grid-cols-3 gap-2">
-                                <button onclick="selectTopic('ac-motors', 'explain')" class="flex flex-col items-center gap-1 p-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('ac-motors', 'explain')" class="flex flex-col items-center gap-1 p-3 bg-indigo-500 hover:bg-indigo-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">📖</span>
                                     <span class="text-sm font-medium">Learn</span>
                                 </button>
-                                <button onclick="selectTopic('ac-motors', 'quiz')" class="flex flex-col items-center gap-1 p-3 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('ac-motors', 'quiz')" class="flex flex-col items-center gap-1 p-3 bg-purple-500 hover:bg-purple-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">✏️</span>
                                     <span class="text-sm font-medium">Quiz</span>
                                 </button>
-                                <button onclick="selectTopic('ac-motors', 'exercises')" class="flex flex-col items-center gap-1 p-3 bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('ac-motors', 'exercises')" class="flex flex-col items-center gap-1 p-3 bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">🎯</span>
                                     <span class="text-sm font-medium">Practice</span>
                                 </button>
@@ -158,25 +166,25 @@
                         </div>
 
                         <!-- Transformers Card -->
-                        <div class="topic-card group relative bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20" data-topic="transformers">
-                            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-purple-600 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="topic-card group relative bg-white dark:bg-gray-800 rounded-2xl p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-violet-400 dark:hover:border-violet-500/50 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-violet-500/20 shadow-lg" data-topic="transformers">
+                            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 to-purple-500 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <div class="icon-transformer text-6xl mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12">⏦</div>
-                            <h3 class="text-2xl font-bold mb-3 text-gray-100">Transformers</h3>
-                            <p class="text-gray-400 mb-4 leading-relaxed">Understand transformer fundamentals, EMF equations, transformation ratio, types, losses, efficiency, and voltage regulation</p>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-gray-100">Transformers</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">Understand transformer fundamentals, EMF equations, transformation ratio, types, losses, efficiency, and voltage regulation</p>
                             <div class="flex gap-2 mb-4">
-                                <span class="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-sm border border-purple-500/20">3 Quizzes</span>
-                                <span class="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-sm border border-purple-500/20">3 Exercises</span>
+                                <span class="px-3 py-1 bg-violet-100 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400 rounded-full text-sm border border-violet-300 dark:border-violet-500/20">3 Quizzes</span>
+                                <span class="px-3 py-1 bg-violet-100 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400 rounded-full text-sm border border-violet-300 dark:border-violet-500/20">3 Exercises</span>
                             </div>
                             <div class="grid grid-cols-3 gap-2">
-                                <button onclick="selectTopic('transformers', 'explain')" class="flex flex-col items-center gap-1 p-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('transformers', 'explain')" class="flex flex-col items-center gap-1 p-3 bg-indigo-500 hover:bg-indigo-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">📖</span>
                                     <span class="text-sm font-medium">Learn</span>
                                 </button>
-                                <button onclick="selectTopic('transformers', 'quiz')" class="flex flex-col items-center gap-1 p-3 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('transformers', 'quiz')" class="flex flex-col items-center gap-1 p-3 bg-purple-500 hover:bg-purple-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">✏️</span>
                                     <span class="text-sm font-medium">Quiz</span>
                                 </button>
-                                <button onclick="selectTopic('transformers', 'exercises')" class="flex flex-col items-center gap-1 p-3 bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('transformers', 'exercises')" class="flex flex-col items-center gap-1 p-3 bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">🎯</span>
                                     <span class="text-sm font-medium">Practice</span>
                                 </button>
@@ -184,25 +192,25 @@
                         </div>
 
                         <!-- Practical Transformers Card -->
-                        <div class="topic-card group relative bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-amber-500/50 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-amber-500/20" data-topic="practical-transformers">
-                            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-amber-600 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="topic-card group relative bg-white dark:bg-gray-800 rounded-2xl p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-orange-400 dark:hover:border-orange-500/50 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/20 shadow-lg" data-topic="practical-transformers">
+                            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 to-amber-500 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <div class="icon-practical text-6xl mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12">⏛</div>
-                            <h3 class="text-2xl font-bold mb-3 text-gray-100">Practical Transformers</h3>
-                            <p class="text-gray-400 mb-4 leading-relaxed">Deep dive into equivalent circuits, copper & core losses, efficiency analysis, per-unit system, and testing methods</p>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-gray-100">Practical Transformers</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">Deep dive into equivalent circuits, copper & core losses, efficiency analysis, per-unit system, and testing methods</p>
                             <div class="flex gap-2 mb-4">
-                                <span class="px-3 py-1 bg-amber-500/10 text-amber-400 rounded-full text-sm border border-amber-500/20">4 Quizzes</span>
-                                <span class="px-3 py-1 bg-amber-500/10 text-amber-400 rounded-full text-sm border border-amber-500/20">3 Exercises</span>
+                                <span class="px-3 py-1 bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-full text-sm border border-orange-300 dark:border-orange-500/20">4 Quizzes</span>
+                                <span class="px-3 py-1 bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-full text-sm border border-orange-300 dark:border-orange-500/20">3 Exercises</span>
                             </div>
                             <div class="grid grid-cols-3 gap-2">
-                                <button onclick="selectTopic('practical-transformers', 'explain')" class="flex flex-col items-center gap-1 p-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('practical-transformers', 'explain')" class="flex flex-col items-center gap-1 p-3 bg-indigo-500 hover:bg-indigo-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">📖</span>
                                     <span class="text-sm font-medium">Learn</span>
                                 </button>
-                                <button onclick="selectTopic('practical-transformers', 'quiz')" class="flex flex-col items-center gap-1 p-3 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('practical-transformers', 'quiz')" class="flex flex-col items-center gap-1 p-3 bg-purple-500 hover:bg-purple-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">✏️</span>
                                     <span class="text-sm font-medium">Quiz</span>
                                 </button>
-                                <button onclick="selectTopic('practical-transformers', 'exercises')" class="flex flex-col items-center gap-1 p-3 bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('practical-transformers', 'exercises')" class="flex flex-col items-center gap-1 p-3 bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">🎯</span>
                                     <span class="text-sm font-medium">Practice</span>
                                 </button>
@@ -210,25 +218,25 @@
                         </div>
 
                         <!-- Three-Phase Transformers Card -->
-                        <div class="topic-card group relative bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-green-500/50 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-green-500/20" data-topic="three-phase-transformers">
-                            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 to-green-600 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="topic-card group relative bg-white dark:bg-gray-800 rounded-2xl p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-teal-400 dark:hover:border-teal-500/50 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-teal-500/20 shadow-lg" data-topic="three-phase-transformers">
+                            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <div class="icon-threephase text-6xl mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12">△</div>
-                            <h3 class="text-2xl font-bold mb-3 text-gray-100">Three-Phase Transformers</h3>
-                            <p class="text-gray-400 mb-4 leading-relaxed">Learn Y-Y, Δ-Δ, Y-Δ, Δ-Y connections, phase shifts, open-delta configuration, and three-phase power calculations</p>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-gray-100">Three-Phase Transformers</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">Learn Y-Y, Δ-Δ, Y-Δ, Δ-Y connections, phase shifts, open-delta configuration, and three-phase power calculations</p>
                             <div class="flex gap-2 mb-4">
-                                <span class="px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-sm border border-green-500/20">4 Quizzes</span>
-                                <span class="px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-sm border border-green-500/20">3 Exercises</span>
+                                <span class="px-3 py-1 bg-teal-100 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-full text-sm border border-teal-300 dark:border-teal-500/20">4 Quizzes</span>
+                                <span class="px-3 py-1 bg-teal-100 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-full text-sm border border-teal-300 dark:border-teal-500/20">3 Exercises</span>
                             </div>
                             <div class="grid grid-cols-3 gap-2">
-                                <button onclick="selectTopic('three-phase-transformers', 'explain')" class="flex flex-col items-center gap-1 p-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('three-phase-transformers', 'explain')" class="flex flex-col items-center gap-1 p-3 bg-indigo-500 hover:bg-indigo-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">📖</span>
                                     <span class="text-sm font-medium">Learn</span>
                                 </button>
-                                <button onclick="selectTopic('three-phase-transformers', 'quiz')" class="flex flex-col items-center gap-1 p-3 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('three-phase-transformers', 'quiz')" class="flex flex-col items-center gap-1 p-3 bg-purple-500 hover:bg-purple-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">✏️</span>
                                     <span class="text-sm font-medium">Quiz</span>
                                 </button>
-                                <button onclick="selectTopic('three-phase-transformers', 'exercises')" class="flex flex-col items-center gap-1 p-3 bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('three-phase-transformers', 'exercises')" class="flex flex-col items-center gap-1 p-3 bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">🎯</span>
                                     <span class="text-sm font-medium">Practice</span>
                                 </button>
@@ -236,25 +244,25 @@
                         </div>
 
                         <!-- Generators Card -->
-                        <div class="topic-card group relative bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-yellow-500/50 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/20" data-topic="generators">
-                            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="topic-card group relative bg-white dark:bg-gray-800 rounded-2xl p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-amber-400 dark:hover:border-amber-500/50 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-amber-500/20 shadow-lg" data-topic="generators">
+                            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <div class="icon-generator text-6xl mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12">⚡</div>
-                            <h3 class="text-2xl font-bold mb-3 text-gray-100">Generators</h3>
-                            <p class="text-gray-400 mb-4 leading-relaxed">Study electrical generators, Faraday's law, EMF generation, DC and AC generator principles, and power generation</p>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-900 dark:text-gray-100">Generators</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">Study electrical generators, Faraday's law, EMF generation, DC and AC generator principles, and power generation</p>
                             <div class="flex gap-2 mb-4">
-                                <span class="px-3 py-1 bg-yellow-500/10 text-yellow-400 rounded-full text-sm border border-yellow-500/20">3 Quizzes</span>
-                                <span class="px-3 py-1 bg-yellow-500/10 text-yellow-400 rounded-full text-sm border border-yellow-500/20">3 Exercises</span>
+                                <span class="px-3 py-1 bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-full text-sm border border-amber-300 dark:border-amber-500/20">3 Quizzes</span>
+                                <span class="px-3 py-1 bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-full text-sm border border-amber-300 dark:border-amber-500/20">3 Exercises</span>
                             </div>
                             <div class="grid grid-cols-3 gap-2">
-                                <button onclick="selectTopic('generators', 'explain')" class="flex flex-col items-center gap-1 p-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('generators', 'explain')" class="flex flex-col items-center gap-1 p-3 bg-indigo-500 hover:bg-indigo-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">📖</span>
                                     <span class="text-sm font-medium">Learn</span>
                                 </button>
-                                <button onclick="selectTopic('generators', 'quiz')" class="flex flex-col items-center gap-1 p-3 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('generators', 'quiz')" class="flex flex-col items-center gap-1 p-3 bg-purple-500 hover:bg-purple-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">✏️</span>
                                     <span class="text-sm font-medium">Quiz</span>
                                 </button>
-                                <button onclick="selectTopic('generators', 'exercises')" class="flex flex-col items-center gap-1 p-3 bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200 group/btn">
+                                <button onclick="selectTopic('generators', 'exercises')" class="flex flex-col items-center gap-1 p-3 bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors duration-200 group/btn text-white shadow-md">
                                     <span class="text-2xl group-hover/btn:scale-110 transition-transform duration-200">🎯</span>
                                     <span class="text-sm font-medium">Practice</span>
                                 </button>
@@ -266,21 +274,21 @@
 
             <!-- Explanation View -->
             <div id="explanationView" class="view">
-                <div class="mb-6 flex items-center justify-between bg-gray-800 p-4 rounded-xl border border-gray-700">
-                    <button id="backFromExplanation" class="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors duration-200 flex items-center gap-2 font-medium">
+                <div class="mb-6 flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 shadow-lg">
+                    <button id="backFromExplanation" class="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors duration-200 flex items-center gap-2 font-medium shadow-md">
                         <span>←</span> Back
                     </button>
-                    <h2 id="explanationTitle" class="text-3xl font-bold text-gray-100">Topic Explanation</h2>
+                    <h2 id="explanationTitle" class="text-3xl font-bold text-gray-900 dark:text-gray-100">Topic Explanation</h2>
                     <div class="w-24"></div>
                 </div>
-                <div id="explanationContent" class="bg-gray-800 rounded-2xl p-8 border border-gray-700 content-area">
+                <div id="explanationContent" class="bg-white dark:bg-gray-800 rounded-2xl p-8 border-2 border-gray-200 dark:border-gray-700 content-area shadow-lg">
                     <!-- Dynamic content will be loaded here -->
                 </div>
             </div>
 
             <!-- Quiz View -->
             <div id="quizView" class="view">
-                <div class="mb-6 flex items-center justify-between bg-gray-800 p-4 rounded-xl border border-gray-700">
+                <div class="mb-6 flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 shadow-lg">
                     <button id="backFromQuiz" class="btn btn-outline">← Back</button>
                     <h2 id="quizTitle">Topic Quiz</h2>
                 </div>

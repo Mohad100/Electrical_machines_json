@@ -298,11 +298,23 @@ body {
     font-size: 5rem;
     margin-bottom: 1rem;
     animation: pulse 2s ease-in-out infinite;
+    color: #fbbf24; /* Golden yellow for electricity */
+    text-shadow: 0 0 30px rgba(251, 191, 36, 0.5),
+                 0 0 50px rgba(251, 191, 36, 0.3);
+    filter: drop-shadow(0 4px 10px rgba(251, 191, 36, 0.4));
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    0%, 100% { 
+        transform: scale(1);
+        text-shadow: 0 0 30px rgba(251, 191, 36, 0.5),
+                     0 0 50px rgba(251, 191, 36, 0.3);
+    }
+    50% { 
+        transform: scale(1.1);
+        text-shadow: 0 0 40px rgba(251, 191, 36, 0.7),
+                     0 0 60px rgba(251, 191, 36, 0.5);
+    }
 }
 
 .hero-title {
@@ -409,6 +421,43 @@ body {
     font-size: 3.5rem;
     padding: 2rem 2rem 1rem 2rem;
     display: block;
+    font-weight: bold;
+    transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Colored icons for each topic */
+.topic-card[data-topic="dc-motors"] .topic-icon {
+    color: #ef4444; /* Red - DC power */
+    text-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+.topic-card[data-topic="ac-motors"] .topic-icon {
+    color: #3b82f6; /* Blue - AC current */
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.topic-card[data-topic="transformers"] .topic-icon {
+    color: #8b5cf6; /* Purple - Transformation */
+    text-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.topic-card[data-topic="practical-transformers"] .topic-icon {
+    color: #f59e0b; /* Amber - Practical/Warning */
+    text-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+}
+
+.topic-card[data-topic="three-phase-transformers"] .topic-icon {
+    color: #10b981; /* Green - Three phases */
+    text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+.topic-card[data-topic="generators"] .topic-icon {
+    color: #eab308; /* Yellow - Electric generation */
+    text-shadow: 0 0 20px rgba(234, 179, 8, 0.3);
+}
+
+.topic-card:hover .topic-icon {
+    transform: scale(1.1) rotate(5deg);
 }
 
 .topic-content {

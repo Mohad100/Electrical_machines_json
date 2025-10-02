@@ -1,0 +1,41 @@
+# Python virtual environment
+venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.backup
+*.bak
+
+# Logs
+*.log
+
+# Vercel
+.vercel
+
+# Documentation (optional - keep if you want these in GitHub)
+# PYTHON_SETUP.md
+# AI_REMOVAL_SUMMARY.md
+# QUIZ_EXERCISES_UPDATE.md
+# VERCEL_DEPLOYMENT_FIXED.md
+# DEPLOY_QUICK_START.md

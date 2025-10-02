@@ -1,0 +1,214 @@
+/* Quiz Review Styles */
+.quiz-review {
+    margin-top: 2rem;
+}
+
+.review-item {
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-left: 5px solid var(--border);
+}
+
+.review-item.correct {
+    border-left-color: #10b981;
+    background: linear-gradient(to right, rgba(16, 185, 129, 0.1), var(--surface));
+}
+
+.review-item.incorrect {
+    border-left-color: #ef4444;
+    background: linear-gradient(to right, rgba(239, 68, 68, 0.1), var(--surface));
+}
+
+.review-item h4 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.status-icon {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.review-item.correct .status-icon {
+    color: #10b981;
+}
+
+.review-item.incorrect .status-icon {
+    color: #ef4444;
+}
+
+.review-question {
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    font-size: 1.35rem;
+    line-height: 1.7;
+}
+
+.review-answer, .review-correct, .review-explanation {
+    margin: 0.75rem 0;
+    padding: 1rem;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    line-height: 1.7;
+}
+
+.review-answer {
+    background: rgba(100, 116, 139, 0.1);
+}
+
+.review-correct {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--text-primary);
+}
+
+.review-explanation {
+    background: rgba(6, 182, 212, 0.1);
+    font-style: italic;
+    border-left: 3px solid var(--primary-color);
+    padding-left: 0.75rem;
+}
+
+/* Quiz Explanation Styles */
+.quiz-explanation {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(6, 182, 212, 0.1);
+    border-left: 5px solid var(--primary-color);
+    border-radius: 8px;
+    animation: fadeIn 0.3s ease;
+    font-size: 1.2rem;
+    line-height: 1.8;
+}
+
+.quiz-explanation strong {
+    color: var(--primary-color);
+    font-size: 1.35rem;
+    font-weight: 600;
+}
+
+/* Exercise Styles */
+.exercise-list {
+    margin-top: 1rem;
+}
+
+.exercise-item {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 2.5rem;
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--border);
+}
+
+.exercise-problem {
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    font-size: 1.4rem;
+    line-height: 1.7;
+}
+
+.exercise-solution {
+    margin-top: 1.5rem;
+    padding: 2rem;
+    background: rgba(6, 182, 212, 0.05);
+    border-radius: 8px;
+    border: 2px solid var(--primary-color);
+    font-size: 1.2rem;
+    line-height: 1.8;
+}
+
+.exercise-solution h4 {
+    color: var(--primary-color);
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.exercise-solution h4:first-child {
+    margin-top: 0;
+}
+
+.exercise-solution ul {
+    margin-left: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.exercise-solution li {
+    margin: 0.75rem 0;
+    font-size: 1.2rem;
+    line-height: 1.7;
+}
+
+.answer-highlight {
+    background: linear-gradient(120deg, rgba(16, 185, 129, 0.2) 0%, rgba(6, 182, 212, 0.2) 100%);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 5px solid #10b981;
+    font-weight: 600;
+    font-size: 1.4rem;
+    margin-top: 1.5rem;
+    line-height: 1.7;
+}
+
+.toggle-solution-btn {
+    margin-top: 1.5rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.toggle-solution-btn:hover {
+    background: var(--primary-hover);
+}
+
+.solution-content {
+    display: none;
+    margin-top: 1.5rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.solution-content.show {
+    display: block;
+}
+
+/* Exercise solution paragraph and text styling */
+.exercise-solution p {
+    margin-bottom: 1.25rem;
+    font-size: 1.2rem;
+    line-height: 1.8;
+}
+
+.exercise-solution strong {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.exercise-solution .katex {
+    font-size: 1.15em;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

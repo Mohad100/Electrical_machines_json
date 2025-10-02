@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrical Machines Course</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="quiz-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.0/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.0/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.0/contrib/auto-render.min.js"></script>
+</head>
+<body class="dark-theme">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">⚡ Electrical Machines Course</h1>
+            <div class="header-controls">
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Topic Selector View -->
+            <div id="topicSelector" class="view active">
+                <!-- Hero Section -->
+                <div class="hero-section">
+                    <div class="hero-content">
+                        <div class="hero-icon">⚡</div>
+                        <h1 class="hero-title">Electrical Machines</h1>
+                        <p class="hero-subtitle">Master the fundamentals of electrical machines with comprehensive lessons, interactive quizzes, and practical exercises</p>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">6</span>
+                                <span class="stat-label">Topics</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">20</span>
+                                <span class="stat-label">Quizzes</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">18</span>
+                                <span class="stat-label">Exercises</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Topics Section -->
+                <div class="topics-section">
+                    <h2 class="section-title">📚 Course Topics</h2>
+                    <div class="topics-grid">
+                        <div class="topic-card" data-topic="dc-motors">
+                            <div class="topic-icon">🔌</div>
+                            <div class="topic-content">
+                                <h3>DC Motors</h3>
+                                <p>Master DC motor principles, EMF equations, types (Series, Shunt, Compound), speed control, and efficiency analysis</p>
+                                <div class="topic-meta">
+                                    <span class="meta-badge">3 Quizzes</span>
+                                    <span class="meta-badge">3 Exercises</span>
+                                </div>
+                            </div>
+                            <div class="topic-actions">
+                                <button class="btn-action btn-explain" onclick="selectTopic('dc-motors', 'explain')" title="Learn the theory">
+                                    <span class="btn-icon">📖</span>
+                                    <span class="btn-text">Learn</span>
+                                </button>
+                                <button class="btn-action btn-quiz" onclick="selectTopic('dc-motors', 'quiz')" title="Test your knowledge">
+                                    <span class="btn-icon">✏️</span>
+                                    <span class="btn-text">Quiz</span>
+                                </button>
+                                <button class="btn-action btn-exercise" onclick="selectTopic('dc-motors', 'exercises')" title="Practice problems">
+                                    <span class="btn-icon">🎯</span>
+                                    <span class="btn-text">Practice</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="topic-card" data-topic="ac-motors">
+                            <div class="topic-icon">🌀</div>
+                            <div class="topic-content">
+                                <h3>AC Motors</h3>
+                                <p>Explore induction motors, synchronous motors, rotating magnetic field, slip, torque-slip characteristics, and speed control</p>
+                                <div class="topic-meta">
+                                    <span class="meta-badge">3 Quizzes</span>
+                                    <span class="meta-badge">3 Exercises</span>
+                                </div>
+                            </div>
+                            <div class="topic-actions">
+                                <button class="btn-action btn-explain" onclick="selectTopic('ac-motors', 'explain')">
+                                    <span class="btn-icon">📖</span>
+                                    <span class="btn-text">Learn</span>
+                                </button>
+                                <button class="btn-action btn-quiz" onclick="selectTopic('ac-motors', 'quiz')">
+                                    <span class="btn-icon">✏️</span>
+                                    <span class="btn-text">Quiz</span>
+                                </button>
+                                <button class="btn-action btn-exercise" onclick="selectTopic('ac-motors', 'exercises')">
+                                    <span class="btn-icon">🎯</span>
+                                    <span class="btn-text">Practice</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="topic-card" data-topic="transformers">
+                            <div class="topic-icon">🔋</div>
+                            <div class="topic-content">
+                                <h3>Transformers</h3>
+                                <p>Understand transformer fundamentals, EMF equations, transformation ratio, types, losses, efficiency, and voltage regulation</p>
+                                <div class="topic-meta">
+                                    <span class="meta-badge">3 Quizzes</span>
+                                    <span class="meta-badge">3 Exercises</span>
+                                </div>
+                            </div>
+                            <div class="topic-actions">
+                                <button class="btn-action btn-explain" onclick="selectTopic('transformers', 'explain')">
+                                    <span class="btn-icon">📖</span>
+                                    <span class="btn-text">Learn</span>
+                                </button>
+                                <button class="btn-action btn-quiz" onclick="selectTopic('transformers', 'quiz')">
+                                    <span class="btn-icon">✏️</span>
+                                    <span class="btn-text">Quiz</span>
+                                </button>
+                                <button class="btn-action btn-exercise" onclick="selectTopic('transformers', 'exercises')">
+                                    <span class="btn-icon">🎯</span>
+                                    <span class="btn-text">Practice</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="topic-card" data-topic="practical-transformers">
+                            <div class="topic-icon">⚙️</div>
+                            <div class="topic-content">
+                                <h3>Practical Transformers</h3>
+                                <p>Deep dive into equivalent circuits, copper & core losses, efficiency analysis, per-unit system, and testing methods</p>
+                                <div class="topic-meta">
+                                    <span class="meta-badge">4 Quizzes</span>
+                                    <span class="meta-badge">3 Exercises</span>
+                                </div>
+                            </div>
+                            <div class="topic-actions">
+                                <button class="btn-action btn-explain" onclick="selectTopic('practical-transformers', 'explain')">
+                                    <span class="btn-icon">📖</span>
+                                    <span class="btn-text">Learn</span>
+                                </button>
+                                <button class="btn-action btn-quiz" onclick="selectTopic('practical-transformers', 'quiz')">
+                                    <span class="btn-icon">✏️</span>
+                                    <span class="btn-text">Quiz</span>
+                                </button>
+                                <button class="btn-action btn-exercise" onclick="selectTopic('practical-transformers', 'exercises')">
+                                    <span class="btn-icon">🎯</span>
+                                    <span class="btn-text">Practice</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="topic-card" data-topic="three-phase-transformers">
+                            <div class="topic-icon">🔺</div>
+                            <div class="topic-content">
+                                <h3>Three-Phase Transformers</h3>
+                                <p>Learn Y-Y, Δ-Δ, Y-Δ, Δ-Y connections, phase shifts, open-delta configuration, and three-phase power calculations</p>
+                                <div class="topic-meta">
+                                    <span class="meta-badge">4 Quizzes</span>
+                                    <span class="meta-badge">3 Exercises</span>
+                                </div>
+                            </div>
+                            <div class="topic-actions">
+                                <button class="btn-action btn-explain" onclick="selectTopic('three-phase-transformers', 'explain')">
+                                    <span class="btn-icon">📖</span>
+                                    <span class="btn-text">Learn</span>
+                                </button>
+                                <button class="btn-action btn-quiz" onclick="selectTopic('three-phase-transformers', 'quiz')">
+                                    <span class="btn-icon">✏️</span>
+                                    <span class="btn-text">Quiz</span>
+                                </button>
+                                <button class="btn-action btn-exercise" onclick="selectTopic('three-phase-transformers', 'exercises')">
+                                    <span class="btn-icon">🎯</span>
+                                    <span class="btn-text">Practice</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="topic-card" data-topic="generators">
+                            <div class="topic-icon">⚡</div>
+                            <div class="topic-content">
+                                <h3>Generators</h3>
+                                <p>Study electrical generators, Faraday's law, EMF generation, DC and AC generator principles, and power generation</p>
+                                <div class="topic-meta">
+                                    <span class="meta-badge">3 Quizzes</span>
+                                    <span class="meta-badge">3 Exercises</span>
+                                </div>
+                            </div>
+                            <div class="topic-actions">
+                                <button class="btn-action btn-explain" onclick="selectTopic('generators', 'explain')">
+                                    <span class="btn-icon">📖</span>
+                                    <span class="btn-text">Learn</span>
+                                </button>
+                                <button class="btn-action btn-quiz" onclick="selectTopic('generators', 'quiz')">
+                                    <span class="btn-icon">✏️</span>
+                                    <span class="btn-text">Quiz</span>
+                                </button>
+                                <button class="btn-action btn-exercise" onclick="selectTopic('generators', 'exercises')">
+                                    <span class="btn-icon">🎯</span>
+                                    <span class="btn-text">Practice</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Explanation View -->
+            <div id="explanationView" class="view">
+                <div class="view-header">
+                    <button id="backFromExplanation" class="btn btn-outline">← Back</button>
+                    <h2 id="explanationTitle">Topic Explanation</h2>
+                </div>
+                <div id="explanationContent" class="content-area">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Quiz View -->
+            <div id="quizView" class="view">
+                <div class="view-header">
+                    <button id="backFromQuiz" class="btn btn-outline">← Back</button>
+                    <h2 id="quizTitle">Topic Quiz</h2>
+                </div>
+                <div id="quizContent" class="quiz-container">
+                    <!-- Dynamic quiz content will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Exercises View -->
+            <div id="exercisesView" class="view">
+                <div class="view-header">
+                    <button id="backFromExercises" class="btn btn-outline">← Back</button>
+                    <h2 id="exercisesTitle">Practice Exercises</h2>
+                </div>
+                <div id="exercisesContent" class="content-area">
+                    <!-- Dynamic exercises content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

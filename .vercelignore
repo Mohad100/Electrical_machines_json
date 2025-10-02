@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+.env
+.vscode/
+.git/
+*.backup
+python-backend/
+PYTHON_SETUP.md
+AI_REMOVAL_SUMMARY.md
+QUIZ_EXERCISES_UPDATE.md

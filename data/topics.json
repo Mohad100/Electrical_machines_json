@@ -1,0 +1,40 @@
+{
+  "topics": [
+    {
+      "id": "dc-motors",
+      "title": "DC Motors",
+      "description": "Master DC motor principles, EMF equations, and types",
+      "dataFile": "dc-motors.json"
+    },
+    {
+      "id": "ac-motors",
+      "title": "AC Motors",
+      "description": "Explore AC motor types, synchronous and asynchronous motors",
+      "dataFile": "ac-motors.json"
+    },
+    {
+      "id": "transformers",
+      "title": "Transformers",
+      "description": "Understanding transformer principles and applications",
+      "dataFile": "transformers.json"
+    },
+    {
+      "id": "practical-transformers",
+      "title": "Practical Transformers",
+      "description": "Equivalent circuits, losses, regulation and efficiency analysis",
+      "dataFile": "practical-transformers.json"
+    },
+    {
+      "id": "three-phase-transformers",
+      "title": "Three-Phase Transformers",
+      "description": "Connections, phase shifts, and power calculations in 3-phase systems",
+      "dataFile": "three-phase-transformers.json"
+    },
+    {
+      "id": "generators",
+      "title": "Generators",
+      "description": "Learn about electrical generators and power generation",
+      "dataFile": "generators.json"
+    }
+  ]
+}

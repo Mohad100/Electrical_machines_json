@@ -1,0 +1,50 @@
+{
+  "id": "generators",
+  "title": "Generators",
+  "explanation": "\n            <h3>Generator Fundamentals</h3>\n            <p>Electrical generators convert mechanical energy into electrical energy using electromagnetic induction.</p>\n            \n            <h3>Faraday's Law</h3>\n            <p>The fundamental principle is Faraday's law of electromagnetic induction:</p>\n            <p>$e = -\\frac{d\\phi}{dt}$</p>\n            <p>Where e is the induced EMF and φ is the magnetic flux.</p>\n\n            <h3>EMF in DC Generator</h3>\n            <p>The EMF generated in a DC generator is:</p>\n            <p>$E = \\frac{P\\phi ZN}{60A}$</p>\n            <p>This is the same equation as for DC motors, showing the reversible nature.</p>\n\n            <h3>Types of Generators</h3>\n            <ul>\n                <li><strong>DC Generators:</strong> Produce direct current</li>\n                <li><strong>AC Generators (Alternators):</strong> Produce alternating current</li>\n                <li><strong>Synchronous Generators:</strong> Run at constant speed</li>\n                <li><strong>Asynchronous Generators:</strong> Can run at variable speeds</li>\n            </ul>\n\n            <h3>AC Generator EMF</h3>\n            <p>For a single-phase AC generator:</p>\n            <p>$e = E_m \\sin(\\omega t)$</p>\n            <p>Where $E_m = NBA\\omega$ is the maximum EMF.</p>\n\n            <h3>Three-Phase Generator</h3>\n            <p>Three-phase generators produce three EMFs displaced by 120°:</p>\n            <ul>\n                <li>$e_R = E_m \\sin(\\omega t)$</li>\n                <li>$e_Y = E_m \\sin(\\omega t - 120°)$</li>\n                <li>$e_B = E_m \\sin(\\omega t - 240°)$</li>\n            </ul>\n        ",
+  "quiz": [
+    {
+      "question": "What is the fundamental principle of electrical generators?",
+      "options": [
+        "Ohm's law",
+        "Faraday's law of electromagnetic induction",
+        "Lenz's law",
+        "Kirchhoff's law"
+      ],
+      "correct": 1,
+      "explanation": "Generators work on Faraday's law of electromagnetic induction, which states that when a conductor moves through a magnetic field (or when flux linking a coil changes), an EMF is induced. The magnitude is given by: $e = -N\\frac{d\\phi}{dt}$ where $N$ is the number of turns and $\\phi$ is the magnetic flux (Wb)."
+    },
+    {
+      "question": "In a three-phase generator, the EMFs are displaced by:",
+      "options": [
+        "90°",
+        "120°",
+        "180°",
+        "60°"
+      ],
+      "correct": 1,
+      "explanation": "In a three-phase generator, three identical coils are placed $120°$ apart in space. As the rotor rotates, the EMFs induced are: $e_R = E_m\\sin(\\omega t)$, $e_Y = E_m\\sin(\\omega t - 120°)$, $e_B = E_m\\sin(\\omega t - 240°)$. Since $\\frac{360°}{3} = 120°$, this creates a balanced three-phase system."
+    },
+    {
+      "question": "The EMF equation for DC generators is the same as:",
+      "options": [
+        "AC motors",
+        "Transformers",
+        "DC motors",
+        "Capacitors"
+      ],
+      "correct": 2,
+      "explanation": "DC generators and DC motors are reversible machines with the same construction. Both use the equation: $E = \\frac{P\\phi ZN}{60A}$ where $P$ = poles, $\\phi$ = flux/pole (Wb), $Z$ = conductors, $N$ = speed (rpm), $A$ = parallel paths. In a motor, $E$ is back EMF opposing the supply; in a generator, $E$ is the generated EMF. The only difference is the direction of energy conversion."
+    }
+  ],
+  "exercises": [
+    {
+      "problem": "A 6-pole DC generator has 900 conductors and runs at 1000 rpm with wave winding. If the flux per pole is 0.04 Wb, calculate the generated EMF.",
+      "solution": "<h4>Given:</h4>\n<ul>\n<li>P = 6 poles</li>\n<li>Z = 900 conductors</li>\n<li>N = 1000 rpm</li>\n<li>φ = 0.04 Wb</li>\n<li>Wave winding: A = 2</li>\n</ul>\n<h4>Formula:</h4>\n<p>$E = \\frac{P\\phi ZN}{60A}$</p>\n<h4>Step-by-Step Solution:</h4>\n<p><strong>Step 1:</strong> Identify all values</p>\n<p>P = 6, φ = 0.04 Wb, Z = 900, N = 1000 rpm, A = 2</p>\n<p><strong>Step 2:</strong> Substitute in the formula</p>\n<p>$E = \\frac{6 \\times 0.04 \\times 900 \\times 1000}{60 \\times 2}$</p>\n<p><strong>Step 3:</strong> Calculate the numerator</p>\n<p>$= \\frac{216000}{120}$</p>\n<p><strong>Step 4:</strong> Final answer</p>\n<p class=\"answer-highlight\">$E = 1800$ V or 1.8 kV</p>"
+    },
+    {
+      "problem": "A single-phase AC generator has a coil with 200 turns rotating at 3000 rpm in a magnetic field. The area of the coil is 0.05 m² and the flux density is 0.8 T. Calculate the maximum EMF generated.",
+      "solution": "<h4>Given:</h4>\n<ul>\n<li>N = 200 turns</li>\n<li>Speed n = 3000 rpm</li>\n<li>Area A = 0.05 m²</li>\n<li>Flux density B = 0.8 T</li>\n</ul>\n<h4>Formulas:</h4>\n<p>$\\phi = BA$</p>\n<p>$\\omega = \\frac{2\\pi n}{60}$</p>\n<p>$E_m = N\\phi\\omega$</p>\n<h4>Step-by-Step Solution:</h4>\n<p><strong>Step 1:</strong> Calculate the flux</p>\n<p>$\\phi = 0.8 \\times 0.05 = 0.04$ Wb</p>\n<p><strong>Step 2:</strong> Calculate angular velocity</p>\n<p>$\\omega = \\frac{2 \\times 3.14159 \\times 3000}{60} = \\frac{18849.54}{60} = 314.16$ rad/s</p>\n<p><strong>Step 3:</strong> Calculate maximum EMF</p>\n<p>$E_m = 200 \\times 0.04 \\times 314.16$</p>\n<p>$E_m = 8 \\times 314.16 = 2513.28$ V</p>\n<p><strong>Step 4:</strong> Final answer</p>\n<p class=\"answer-highlight\">$E_m = 2513.3$ V or 2.51 kV</p>"
+    }
+  ]
+}

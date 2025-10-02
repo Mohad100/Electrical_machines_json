@@ -1,0 +1,1453 @@
+// Application State
+let currentView = 'topicSelector';
+let currentTopic = null;
+
+// Topic Data - will be loaded dynamically from JSON
+let topicData = {};
+let topicsIndex = null;
+
+// Load topics index on startup
+async function loadTopicsIndex() {
+    try {
+        const response = await fetch('data/topics.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        topicsIndex = await response.json();
+        console.log('Topics index loaded:', topicsIndex);
+    } catch (error) {
+        console.error('Error loading topics index:', error);
+    }
+}
+
+// Load individual topic data
+async function loadTopicData(topicId) {
+    // Return if already loaded
+    if (topicData[topicId]) {
+        return topicData[topicId];
+    }
+    
+    try {
+        const response = await fetch(`data/${topicId}.json`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        topicData[topicId] = data;
+        console.log(`Topic ${topicId} loaded:`, data);
+        return data;
+    } catch (error) {
+        console.error(`Error loading topic ${topicId}:`, error);
+        return null;
+    }
+}
+
+// All topic data is now loaded dynamically from JSON files in the data/ directory
+// No embedded data needed here
+
+// DOM Elements
+const elements = {
+            <p>A DC motor is an electrical machine that converts direct current electrical energy into mechanical energy through the interaction of magnetic fields.</p>
+            
+            <h3>Basic Principle</h3>
+            <p>DC motors operate on the principle that when a current-carrying conductor is placed in a magnetic field, it experiences a force. This is described by the equation:</p>
+            <p>$F = BIL$</p>
+            <p>Where:</p>
+            <ul>
+                <li>F = Force (N)</li>
+                <li>B = Magnetic flux density (T)</li>
+                <li>I = Current (A)</li>
+                <li>L = Length of conductor (m)</li>
+            </ul>
+
+            <h3>EMF Equation</h3>
+            <p>The back EMF generated in a DC motor is given by:</p>
+            <p>$E_b = \\frac{P\\phi ZN}{60A}$</p>
+            <p>Where:</p>
+            <ul>
+                <li>$E_b$ = Back EMF (V)</li>
+                <li>P = Number of poles</li>
+                <li>$\\phi$ = Flux per pole (Wb)</li>
+                <li>Z = Total number of conductors</li>
+                <li>N = Speed (rpm)</li>
+                <li>A = Number of parallel paths</li>
+            </ul>
+
+            <h3>Types of DC Motors</h3>
+            <ul>
+                <li><strong>Series Motor:</strong> Field winding connected in series with armature</li>
+                <li><strong>Shunt Motor:</strong> Field winding connected in parallel with armature</li>
+                <li><strong>Compound Motor:</strong> Combination of series and shunt characteristics</li>
+            </ul>
+
+            <h3>Torque Equation</h3>
+            <p>The torque developed by a DC motor is:</p>
+            <p>$T = \\frac{P\\phi ZI_a}{2\\pi A}$</p>
+            <p>Where $I_a$ is the armature current.</p>
+        `,
+        quiz: [
+            {
+                question: "What is the basic principle of DC motor operation?",
+                options: [
+                    "Electromagnetic induction",
+                    "Force on current-carrying conductor in magnetic field",
+                    "Transformer action",
+                    "Capacitive coupling"
+                ],
+                correct: 1,
+                explanation: "DC motors operate on the principle that when a current-carrying conductor is placed in a magnetic field, it experiences a mechanical force given by: $F = BIL$ where $B$ is magnetic flux density (T), $I$ is current (A), and $L$ is conductor length (m). This force causes the armature to rotate, converting electrical energy to mechanical energy."
+            },
+            {
+                question: "In the EMF equation $E_b = \\frac{P\\phi ZN}{60A}$, what does 'A' represent?",
+                options: [
+                    "Armature current",
+                    "Number of parallel paths",
+                    "Cross-sectional area",
+                    "Acceleration"
+                ],
+                correct: 1,
+                explanation: "In the EMF equation $E_b = \\frac{P\\phi ZN}{60A}$, the variable $A$ represents the number of parallel paths in the armature winding. For wave winding: $A = 2$, and for lap winding: $A = P$ (number of poles). This affects how conductors are connected and thus the voltage generated."
+            },
+            {
+                question: "Which DC motor type has field winding in series with armature?",
+                options: [
+                    "Shunt motor",
+                    "Compound motor",
+                    "Series motor",
+                    "Synchronous motor"
+                ],
+                correct: 2,
+                explanation: "A series motor has its field winding connected in series with the armature, so the same current flows through both. This gives high starting torque but poor speed regulation, making it ideal for traction applications like trains and cranes."
+            }
+        ],
+        exercises: [
+            {
+                problem: "A 4-pole DC motor has 500 conductors with wave winding. If the flux per pole is 0.02 Wb and the motor runs at 1200 rpm, calculate the generated back EMF.",
+                solution: `<h4>Given:</h4>
+<ul>
+<li>P = 4 poles</li>
+<li>Z = 500 conductors</li>
+<li>N = 1200 rpm</li>
+<li>φ = 0.02 Wb</li>
+<li>Wave winding: A = 2</li>
+</ul>
+<h4>Formula:</h4>
+<p>$E_b = \\frac{P\\phi ZN}{60A}$</p>
+<h4>Step-by-Step Solution:</h4>
+<p><strong>Step 1:</strong> Identify all values</p>
+<p>P = 4, φ = 0.02 Wb, Z = 500, N = 1200 rpm, A = 2</p>
+<p><strong>Step 2:</strong> Substitute in the formula</p>
+<p>$E_b = \\frac{4 \\times 0.02 \\times 500 \\times 1200}{60 \\times 2}$</p>
+<p><strong>Step 3:</strong> Calculate the numerator</p>
+<p>$= \\frac{48000}{120} = 400$ V</p>
+<p><strong>Step 4:</strong> Final answer</p>
+<p class="answer-highlight">Back EMF = 400 V</p>`
+            },
+            {
+                problem: "A DC motor takes an armature current of 50 A at 220 V. The armature resistance is 0.3 Ω. Calculate the back EMF and the power developed in the armature.",
+                solution: `<h4>Given:</h4>
+<ul>
+<li>V = 220 V</li>
+<li>I<sub>a</sub> = 50 A</li>
+<li>R<sub>a</sub> = 0.3 Ω</li>
+</ul>
+<h4>Formulas:</h4>
+<p>$E_b = V - I_a R_a$</p>
+<p>$P = E_b \\times I_a$</p>
+<h4>Step-by-Step Solution:</h4>
+<p><strong>Step 1:</strong> Calculate voltage drop across armature resistance</p>
+<p>$I_a R_a = 50 \\times 0.3 = 15$ V</p>
+<p><strong>Step 2:</strong> Calculate back EMF</p>
+<p>$E_b = V - I_a R_a = 220 - 15 = 205$ V</p>
+<p><strong>Step 3:</strong> Calculate power developed</p>
+<p>$P = E_b \\times I_a = 205 \\times 50 = 10,250$ W</p>
+<p><strong>Step 4:</strong> Final answer</p>
+<p class="answer-highlight">Back EMF = 205 V<br>Power developed = 10.25 kW</p>`
+            }
+        ]
+    },
+    'ac-motors': {
+        title: 'AC Motors',
+        explanation: `
+            <h3>AC Motor Fundamentals</h3>
+            <p>AC motors convert alternating current electrical energy into mechanical energy using rotating magnetic fields.</p>
+            
+            <h3>Rotating Magnetic Field</h3>
+            <p>The fundamental principle of AC motors is the creation of a rotating magnetic field by three-phase currents displaced by 120°. The synchronous speed is given by:</p>
+            <p>$N_s = \\frac{120f}{P}$</p>
+            <p>Where:</p>
+            <ul>
+                <li>$N_s$ = Synchronous speed (rpm)</li>
+                <li>f = Frequency (Hz)</li>
+                <li>P = Number of poles</li>
+            </ul>
+
+            <h3>Types of AC Motors</h3>
+            <ul>
+                <li><strong>Synchronous Motors:</strong> Run at synchronous speed</li>
+                <li><strong>Induction Motors:</strong> Run at less than synchronous speed</li>
+            </ul>
+
+            <h3>Slip in Induction Motors</h3>
+            <p>Slip is the difference between synchronous speed and rotor speed:</p>
+            <p>$s = \\frac{N_s - N_r}{N_s} \\times 100\\%$</p>
+            <p>Where $N_r$ is the rotor speed.</p>
+
+            <h3>Torque-Slip Characteristics</h3>
+            <p>The torque developed by an induction motor is:</p>
+            <p>$T = \\frac{K \\cdot s \\cdot E_2^2 \\cdot R_2}{R_2^2 + (s \\cdot X_2)^2}$</p>
+            <p>Where K is a constant, $E_2$ is rotor EMF, $R_2$ is rotor resistance, and $X_2$ is rotor reactance.</p>
+        `,
+        quiz: [
+            {
+                question: "What creates the rotating magnetic field in AC motors?",
+                options: [
+                    "Single-phase current",
+                    "Three-phase currents displaced by 120°",
+                    "DC current",
+                    "Permanent magnets"
+                ],
+                correct: 1,
+                explanation: "The rotating magnetic field in three-phase AC motors is created by three-phase currents: $i_R = I_m\\sin(\\omega t)$, $i_Y = I_m\\sin(\\omega t - 120°)$, $i_B = I_m\\sin(\\omega t - 240°)$ flowing through stator windings displaced by $120°$ in space. This produces a smooth, constant-magnitude rotating field."
+            },
+            {
+                question: "For a 4-pole, 50Hz AC motor, what is the synchronous speed?",
+                options: [
+                    "1500 rpm",
+                    "3000 rpm",
+                    "1000 rpm",
+                    "750 rpm"
+                ],
+                correct: 0,
+                explanation: "Using the formula $N_s = \\frac{120f}{P}$, we get: $N_s = \\frac{120 \\times 50}{4} = \\frac{6000}{4} = 1500$ rpm. Synchronous speed is the speed at which the rotating magnetic field rotates and depends on supply frequency $f$ and number of poles $P$."
+            },
+            {
+                question: "What is slip in an induction motor?",
+                options: [
+                    "Rotor speed",
+                    "Difference between synchronous and rotor speed",
+                    "Stator speed",
+                    "Magnetic field strength"
+                ],
+                correct: 1,
+                explanation: "Slip is the relative speed difference between the synchronous speed $N_s$ and actual rotor speed $N_r$, calculated as: $s = \\frac{N_s - N_r}{N_s}$ (expressed as a fraction or percentage). Slip is essential for induction motor operation - without slip, there would be no relative motion, no induced currents (frequency $f_r = sf$), and no torque."
+            }
+        ],
+        exercises: [
+            {
+                problem: "A 3-phase induction motor has 4 poles and is connected to 50 Hz supply. Calculate the synchronous speed and the rotor speed if the slip is 4%.",
+                solution: `<h4>Given:</h4>
+<ul>
+<li>P = 4 poles</li>
+<li>f = 50 Hz</li>
+<li>Slip s = 4% = 0.04</li>
+</ul>
+<h4>Formulas:</h4>
+<p>$N_s = \\frac{120f}{P}$</p>
+<p>$N_r = N_s(1 - s)$</p>
+<h4>Step-by-Step Solution:</h4>
+<p><strong>Step 1:</strong> Calculate synchronous speed</p>
+<p>$N_s = \\frac{120 \\times 50}{4} = \\frac{6000}{4} = 1500$ rpm</p>
+<p><strong>Step 2:</strong> Calculate rotor speed</p>
+<p>$N_r = N_s(1 - s) = 1500 \\times (1 - 0.04)$</p>
+<p>$N_r = 1500 \\times 0.96 = 1440$ rpm</p>
+<p><strong>Step 3:</strong> Final answer</p>
+<p class="answer-highlight">Synchronous speed = 1500 rpm<br>Rotor speed = 1440 rpm</p>`
+            },
+            {
+                problem: "A 6-pole, 50 Hz induction motor runs at 960 rpm. Calculate the slip and frequency of rotor current.",
+                solution: `<h4>Given:</h4>
+<ul>
+<li>P = 6 poles</li>
+<li>f = 50 Hz</li>
+<li>N<sub>r</sub> = 960 rpm</li>
+</ul>
+<h4>Formulas:</h4>
+<p>$N_s = \\frac{120f}{P}$</p>
+<p>$s = \\frac{N_s - N_r}{N_s}$</p>
+<p>$f_r = s \\times f$</p>
+<h4>Step-by-Step Solution:</h4>
+<p><strong>Step 1:</strong> Calculate synchronous speed</p>
+<p>$N_s = \\frac{120 \\times 50}{6} = 1000$ rpm</p>
+<p><strong>Step 2:</strong> Calculate slip</p>
+<p>$s = \\frac{N_s - N_r}{N_s} = \\frac{1000 - 960}{1000} = \\frac{40}{1000} = 0.04$</p>
+<p>Slip = 0.04 or 4%</p>
+<p><strong>Step 3:</strong> Calculate rotor frequency</p>
+<p>$f_r = s \\times f = 0.04 \\times 50 = 2$ Hz</p>
+<p><strong>Step 4:</strong> Final answer</p>
+<p class="answer-highlight">Slip = 4%<br>Rotor frequency = 2 Hz</p>`
+            }
+        ]
+    },
+    'transformers': {
+        title: 'Transformers',
+        explanation: `
+            <h3>Transformer Fundamentals</h3>
+            <p>A transformer is a static electrical machine that transfers electrical energy from one circuit to another through electromagnetic induction.</p>
+            
+            <h3>Working Principle</h3>
+            <p>Transformers work on the principle of mutual induction between two or more windings linked by a common magnetic flux.</p>
+
+            <h3>EMF Equation</h3>
+            <p>The EMF induced in each winding is given by:</p>
+            <p>$E = 4.44 \\cdot f \\cdot N \\cdot \\phi_m$</p>
+            <p>Where:</p>
+            <ul>
+                <li>E = RMS value of EMF (V)</li>
+                <li>f = Frequency (Hz)</li>
+                <li>N = Number of turns</li>
+                <li>$\\phi_m$ = Maximum flux (Wb)</li>
+            </ul>
+
+            <h3>Transformation Ratio</h3>
+            <p>The voltage transformation ratio is:</p>
+            <p>$K = \\frac{V_1}{V_2} = \\frac{N_1}{N_2} = \\frac{I_2}{I_1}$</p>
+            <p>Where subscript 1 refers to primary and 2 to secondary.</p>
+
+            <h3>Types of Transformers</h3>
+            <ul>
+                <li><strong>Step-up:</strong> Secondary voltage > Primary voltage</li>
+                <li><strong>Step-down:</strong> Secondary voltage < Primary voltage</li>
+                <li><strong>Isolation:</strong> 1:1 ratio for electrical isolation</li>
+            </ul>
+
+            <h3>Efficiency</h3>
+            <p>Transformer efficiency is given by:</p>
+            <p>$\\eta = \\frac{Output}{Input} = \\frac{V_2I_2\\cos\\phi_2}{V_2I_2\\cos\\phi_2 + P_{losses}} \\times 100\\%$</p>
+        `,
+        quiz: [
+            {
+                question: "What is the working principle of a transformer?",
+                options: [
+                    "Electromagnetic induction",
+                    "Electrostatic induction",
+                    "Magnetic coupling",
+                    "Direct conduction"
+                ],
+                correct: 0,
+                explanation: "Transformers work on the principle of mutual electromagnetic induction. When alternating current flows through the primary winding, it creates a changing magnetic flux $\\phi(t)$ in the core, which induces an EMF in the secondary winding according to Faraday's law: $e = -N\\frac{d\\phi}{dt}$ where $N$ is the number of turns."
+            },
+            {
+                question: "In the EMF equation $E = 4.44 \\cdot f \\cdot N \\cdot \\phi_m$, what does the constant 4.44 represent?",
+                options: [
+                    "Form factor times √2",
+                    "π√2",
+                    "2π√2",
+                    "Mathematical constant"
+                ],
+                correct: 0,
+                explanation: "The constant 4.44 equals $\\frac{2\\pi}{\\sqrt{2}} = \\sqrt{2} \\times \\pi \\approx 4.443$. It comes from the RMS value of sinusoidally varying flux: $E_{rms} = \\frac{E_{peak}}{\\sqrt{2}} = \\frac{2\\pi f N \\phi_m}{\\sqrt{2}} = \\sqrt{2}\\pi f N \\phi_m = 4.44 f N \\phi_m$. This converts peak flux $\\phi_m$ to RMS EMF value."
+            },
+            {
+                question: "If a transformer has a turns ratio of 10:1, what type is it?",
+                options: [
+                    "Step-up",
+                    "Step-down",
+                    "Isolation",
+                    "Auto-transformer"
+                ],
+                correct: 1,
+                explanation: "A turns ratio of 10:1 means $N_1:N_2 = 10:1$, so the primary has 10 times more turns than the secondary. Since the transformation ratio $a = \\frac{V_1}{V_2} = \\frac{N_1}{N_2} = 10$, the secondary voltage will be $V_2 = \\frac{V_1}{10}$, making it a step-down transformer."
+            }
+        ],
+        exercises: [
+            {
+                problem: "A single-phase transformer has 400 turns on the primary winding and 80 turns on the secondary winding. If the primary voltage is 2400 V, calculate: (a) the transformation ratio, (b) the secondary voltage, and (c) classify the transformer type.",
+                solution: `<h4>Given:</h4>
+<ul>
+<li>Primary turns, N₁ = 400 turns</li>
+<li>Secondary turns, N₂ = 80 turns</li>
+<li>Primary voltage, V₁ = 2400 V</li>
+</ul>
+
+<h4>Formula:</h4>
+<p>Transformation ratio: $a = \\frac{N_1}{N_2} = \\frac{V_1}{V_2}$</p>
+
+<h4>Solution:</h4>
+
+<p><strong>Step 1:</strong> Calculate transformation ratio (a)</p>
+<p>$a = \\frac{N_1}{N_2} = \\frac{400}{80} = 5$</p>
+
+<p><strong>Step 2:</strong> Calculate secondary voltage (V₂)</p>
+<p>$\\frac{V_1}{V_2} = a$</p>
+<p>$V_2 = \\frac{V_1}{a} = \\frac{2400}{5} = 480 \\text{ V}$</p>
+
+<p><strong>Step 3:</strong> Classify transformer type</p>
+<p>Since V₂ (480 V) < V₁ (2400 V), this is a <strong>step-down transformer</strong>.</p>
+
+<div class="answer-highlight">
+<strong>Answer:</strong><br>
+(a) Transformation ratio = 5:1<br>
+(b) Secondary voltage = 480 V<br>
+(c) Step-down transformer
+</div>`
+            },
+            {
+                problem: "A 50 Hz transformer has 500 primary turns. The maximum flux in the core is 0.06 Wb. Calculate the RMS value of the induced EMF in the primary winding using the EMF equation.",
+                solution: `<h4>Given:</h4>
+<ul>
+<li>Frequency, f = 50 Hz</li>
+<li>Number of primary turns, N = 500 turns</li>
+<li>Maximum flux, φₘ = 0.06 Wb</li>
+</ul>
+
+<h4>Formula:</h4>
+<p>EMF equation: $E = 4.44 \\cdot f \\cdot N \\cdot \\phi_m$</p>
+
+<h4>Solution:</h4>
+
+<p><strong>Step 1:</strong> Identify the given values</p>
+<ul>
+<li>f = 50 Hz</li>
+<li>N = 500 turns</li>
+<li>φₘ = 0.06 Wb</li>
+<li>Constant = 4.44</li>
+</ul>
+
+<p><strong>Step 2:</strong> Substitute values into the EMF equation</p>
+<p>$E = 4.44 \\times 50 \\times 500 \\times 0.06$</p>
+
+<p><strong>Step 3:</strong> Calculate the result</p>
+<p>$E = 4.44 \\times 50 \\times 500 \\times 0.06$</p>
+<p>$E = 4.44 \\times 1500$</p>
+<p>$E = 6660 \\text{ V}$</p>
+
+<div class="answer-highlight">
+<strong>Answer:</strong> The RMS value of induced EMF in the primary winding is <strong>6660 V or 6.66 kV</strong>
+</div>`
+            }
+        ]
+    },
+    'three-phase-transformers': {
+        title: 'Three-Phase Transformers',
+        explanation: `
+            <h3>Three-Phase Transformer Fundamentals</h3>
+            <p>Three-phase transformers are used in power transmission and distribution systems to transform three-phase voltages. They can be constructed using three separate single-phase transformers (bank) or as a single three-phase unit.</p>
+
+            <h3>Types of Three-Phase Transformers</h3>
+            <p><strong>1. Bank of Three Single-Phase Transformers:</strong></p>
+            <ul>
+                <li>Three separate single-phase transformers connected together</li>
+                <li>Advantages: Easy to replace individual units, flexibility</li>
+                <li>Disadvantages: Higher cost, more space required</li>
+            </ul>
+            
+            <p><strong>2. Three-Phase Core-Type Unit:</strong></p>
+            <ul>
+                <li>Single unit with three limbs sharing a common magnetic circuit</li>
+                <li>Advantages: Lower cost, less space, higher efficiency</li>
+                <li>Disadvantages: Cannot replace individual phases</li>
+            </ul>
+
+            <h3>Connection Types</h3>
+            <p>Three-phase transformers can be connected in four main configurations:</p>
+            
+            <p><strong>1. Star-Star (Y-Y) Connection:</strong></p>
+            <p>$\\frac{V_L}{V_{Ph}} = \\sqrt{3}$ for both primary and secondary</p>
+            <ul>
+                <li>Line voltage = √3 × Phase voltage</li>
+                <li>Neutral point available for grounding</li>
+                <li>Problem: Third harmonic voltages can appear</li>
+            </ul>
+
+            <p><strong>2. Delta-Delta (Δ-Δ) Connection:</strong></p>
+            <p>$V_L = V_{Ph}$ and $I_L = \\sqrt{3} I_{Ph}$</p>
+            <ul>
+                <li>Line voltage = Phase voltage</li>
+                <li>Line current = √3 × Phase current</li>
+                <li>No neutral point available</li>
+                <li>Advantage: Can operate in open-delta with one transformer removed</li>
+            </ul>
+
+            <p><strong>3. Star-Delta (Y-Δ) Connection:</strong></p>
+            <p>$\\frac{V_{L1}}{V_{L2}} = \\frac{N_1}{\\sqrt{3}N_2}$</p>
+            <ul>
+                <li>Used for step-down transformers</li>
+                <li>Primary: Star (High Voltage side)</li>
+                <li>Secondary: Delta (Low Voltage side)</li>
+                <li>30° phase shift between primary and secondary line voltages</li>
+            </ul>
+
+            <p><strong>4. Delta-Star (Δ-Y) Connection:</strong></p>
+            <p>$\\frac{V_{L1}}{V_{L2}} = \\frac{\\sqrt{3}N_1}{N_2}$</p>
+            <ul>
+                <li>Used for step-up transformers</li>
+                <li>Primary: Delta (Low Voltage side)</li>
+                <li>Secondary: Star (High Voltage side)</li>
+                <li>30° phase shift, neutral available on secondary</li>
+            </ul>
+
+            <h3>Voltage and Current Relations</h3>
+            <p><strong>For Star Connection:</strong></p>
+            <p>$V_L = \\sqrt{3} V_{Ph}$ and $I_L = I_{Ph}$</p>
+            
+            <p><strong>For Delta Connection:</strong></p>
+            <p>$V_L = V_{Ph}$ and $I_L = \\sqrt{3} I_{Ph}$</p>
+
+            <h3>Power in Three-Phase Transformers</h3>
+            <p>Total three-phase power:</p>
+            <p>$P = \\sqrt{3} V_L I_L \\cos\\phi$</p>
+            <p>$Q = \\sqrt{3} V_L I_L \\sin\\phi$</p>
+            <p>$S = \\sqrt{3} V_L I_L$ (VA)</p>
+
+            <h3>Open-Delta (V-V) Connection</h3>
+            <p>When one transformer in a delta-delta bank fails, the system can continue operating with two transformers:</p>
+            <ul>
+                <li>Output capacity = 57.7% of original (not 66.7%)</li>
+                <li>Utilization factor = $\\frac{\\sqrt{3}}{2} \\approx 0.866$</li>
+                <li>Used for emergency operation or light loads</li>
+            </ul>
+
+            <h3>Advantages of Three-Phase Transformers</h3>
+            <ul>
+                <li>More economical than three single-phase units</li>
+                <li>Requires less space and lighter in weight</li>
+                <li>Higher efficiency</li>
+                <li>Easier to transport and install (for moderate ratings)</li>
+            </ul>
+        `,
+        quiz: [
+            {
+                question: "In a star-connected winding, what is the relationship between line voltage and phase voltage?",
+                options: [
+                    "$V_L = V_{Ph}$",
+                    "$V_L = \\sqrt{3} V_{Ph}$",
+                    "$V_L = 3 V_{Ph}$",
+                    "$V_L = \\frac{V_{Ph}}{\\sqrt{3}}$"
+                ],
+                correct: 1,
+                explanation: "In a star (Y) connection, the line voltage is √3 times the phase voltage: $V_L = \\sqrt{3} V_{Ph}$. This is because line voltage is the phasor difference between two phase voltages that are 120° apart. Using phasor math: $V_L = \\sqrt{V_{Ph}^2 + V_{Ph}^2 - 2V_{Ph}^2\\cos(120°)} = \\sqrt{3}V_{Ph}$."
+            },
+            {
+                question: "What is the main advantage of Delta-Delta connection?",
+                options: [
+                    "Neutral point available",
+                    "Can operate in open-delta with one transformer removed",
+                    "No phase shift",
+                    "Lower current rating required"
+                ],
+                correct: 1,
+                explanation: "The main advantage of Delta-Delta (Δ-Δ) connection is that it can continue operating in 'open-delta' or 'V-V' configuration if one transformer fails. The system can deliver $\\frac{\\sqrt{3}}{2}$ or 57.7% of the original capacity with just two transformers, providing emergency backup capability."
+            },
+            {
+                question: "In Star-Delta (Y-Δ) connection, what is the phase shift between primary and secondary line voltages?",
+                options: [
+                    "0°",
+                    "30°",
+                    "60°",
+                    "120°"
+                ],
+                correct: 1,
+                explanation: "In Star-Delta (Y-Δ) and Delta-Star (Δ-Y) connections, there is always a 30° phase shift between primary and secondary line voltages. This occurs due to the different reference points in star and delta connections. The shift is important in parallel operation - transformers must have the same connection group to avoid circulating currents."
+            },
+            {
+                question: "What is the output capacity of an open-delta (V-V) connection compared to the original delta-delta capacity?",
+                options: [
+                    "33.3%",
+                    "57.7%",
+                    "66.7%",
+                    "86.6%"
+                ],
+                correct: 1,
+                explanation: "The output capacity of open-delta (V-V) connection is 57.7% of the original delta-delta capacity, calculated as: $\\frac{\\sqrt{3}}{3} = 0.577$ or 57.7%. Although two transformers remain (66.7% of hardware), the power capacity is only 57.7% because the utilization factor is $\\frac{\\sqrt{3}}{2} \\approx 0.866$, meaning each transformer is not fully utilized."
+            }
+        ],
+        exercises: [
+            {
+                problem: "A three-phase transformer has a line voltage of 11 kV on the primary side which is star-connected. The secondary is delta-connected with a line voltage of 400 V. If the primary line current is 30 A, calculate: (a) primary phase voltage, (b) transformation ratio, (c) secondary phase current.",
+                solution: `<h4>Given:</h4>
+<ul>
+<li>Primary: Star-connected</li>
+<li>V<sub>L1</sub> (primary line voltage) = 11 kV = 11,000 V</li>
+<li>I<sub>L1</sub> (primary line current) = 30 A</li>
+<li>Secondary: Delta-connected</li>
+<li>V<sub>L2</sub> (secondary line voltage) = 400 V</li>
+</ul>
+
+<h4>Formulas:</h4>
+<p>Star connection: $V_L = \\sqrt{3} V_{Ph}$, $I_L = I_{Ph}$</p>
+<p>Delta connection: $V_L = V_{Ph}$, $I_L = \\sqrt{3} I_{Ph}$</p>
+<p>Transformation ratio: $K = \\frac{V_{Ph1}}{V_{Ph2}}$</p>
+<p>Power balance: $\\sqrt{3} V_{L1} I_{L1} = \\sqrt{3} V_{L2} I_{L2}$</p>
+
+<h4>Solution:</h4>
+
+<p><strong>Step 1:</strong> Calculate primary phase voltage (Star connection)</p>
+<p>$V_{Ph1} = \\frac{V_{L1}}{\\sqrt{3}} = \\frac{11,000}{\\sqrt{3}} = \\frac{11,000}{1.732} = 6,351$ V</p>
+
+<p><strong>Step 2:</strong> Find secondary phase voltage (Delta connection)</p>
+<p>$V_{Ph2} = V_{L2} = 400$ V (In delta, line voltage = phase voltage)</p>
+
+<p><strong>Step 3:</strong> Calculate transformation ratio per phase</p>
+<p>$K = \\frac{V_{Ph1}}{V_{Ph2}} = \\frac{6,351}{400} = 15.88$</p>
+
+<p><strong>Step 4:</strong> Calculate primary phase current (Star connection)</p>
+<p>$I_{Ph1} = I_{L1} = 30$ A (In star, line current = phase current)</p>
+
+<p><strong>Step 5:</strong> Calculate secondary line current using power balance</p>
+<p>$V_{L1} I_{L1} = V_{L2} I_{L2}$</p>
+<p>$I_{L2} = \\frac{V_{L1} I_{L1}}{V_{L2}} = \\frac{11,000 \\times 30}{400} = 825$ A</p>
+
+<p><strong>Step 6:</strong> Calculate secondary phase current (Delta connection)</p>
+<p>$I_{Ph2} = \\frac{I_{L2}}{\\sqrt{3}} = \\frac{825}{1.732} = 476.4$ A</p>
+
+<div class="answer-highlight">
+<strong>Answers:</strong><br>
+(a) Primary phase voltage = 6,351 V<br>
+(b) Transformation ratio = 15.88:1<br>
+(c) Secondary phase current = 476.4 A
+</div>`
+            },
+            {
+                problem: "Three single-phase transformers, each rated 10 kVA, 2200/220 V, are connected in delta-delta to form a three-phase transformer bank. Calculate: (a) the three-phase rating, (b) line current on high voltage side, (c) line current on low voltage side.",
+                solution: `<h4>Given:</h4>
+<ul>
+<li>Each transformer: 10 kVA, 2200/220 V</li>
+<li>Connection: Delta-Delta (Δ-Δ)</li>
+<li>Three transformers in the bank</li>
+</ul>
+
+<h4>Formulas:</h4>
+<p>Three-phase rating: $S_{3\\phi} = 3 \\times S_{1\\phi}$</p>
+<p>Delta connection: $V_L = V_{Ph}$, $I_L = \\sqrt{3} I_{Ph}$</p>
+<p>Phase current: $I_{Ph} = \\frac{S_{1\\phi}}{V_{Ph}}$</p>
+
+<h4>Solution:</h4>
+
+<p><strong>Step 1:</strong> Calculate three-phase rating</p>
+<p>$S_{3\\phi} = 3 \\times S_{1\\phi} = 3 \\times 10 = 30$ kVA</p>
+
+<p><strong>Step 2:</strong> Identify phase voltages in delta connection</p>
+<p>Primary: $V_{Ph1} = V_{L1} = 2200$ V</p>
+<p>Secondary: $V_{Ph2} = V_{L2} = 220$ V</p>
+
+<p><strong>Step 3:</strong> Calculate phase current on HV side</p>
+<p>$I_{Ph1} = \\frac{S_{1\\phi}}{V_{Ph1}} = \\frac{10,000}{2200} = 4.545$ A</p>
+
+<p><strong>Step 4:</strong> Calculate line current on HV side (Delta connection)</p>
+<p>$I_{L1} = \\sqrt{3} \\times I_{Ph1} = 1.732 \\times 4.545 = 7.87$ A</p>
+
+<p><strong>Step 5:</strong> Calculate phase current on LV side</p>
+<p>$I_{Ph2} = \\frac{S_{1\\phi}}{V_{Ph2}} = \\frac{10,000}{220} = 45.45$ A</p>
+
+<p><strong>Step 6:</strong> Calculate line current on LV side (Delta connection)</p>
+<p>$I_{L2} = \\sqrt{3} \\times I_{Ph2} = 1.732 \\times 45.45 = 78.7$ A</p>
+
+<p><strong>Verification:</strong> Check using three-phase formula</p>
+<p>$S_{3\\phi} = \\sqrt{3} V_{L1} I_{L1} = 1.732 \\times 2200 \\times 7.87 = 30,000$ VA = 30 kVA ✓</p>
+
+<div class="answer-highlight">
+<strong>Answers:</strong><br>
+(a) Three-phase rating = 30 kVA<br>
+(b) HV side line current = 7.87 A<br>
+(c) LV side line current = 78.7 A
+</div>`
+            },
+            {
+                problem: "A delta-delta connected three-phase transformer bank consists of three 15 kVA transformers. One transformer is removed for maintenance, and the system operates in open-delta. Calculate: (a) the maximum load that can be supplied, (b) the kVA rating of each remaining transformer, (c) the utilization factor.",
+                solution: `<h4>Given:</h4>
+<ul>
+<li>Original: Three 15 kVA transformers in Δ-Δ</li>
+<li>Operating: Two transformers in open-delta (V-V)</li>
+</ul>
+
+<h4>Formulas:</h4>
+<p>Original capacity: $S_{\\Delta\\Delta} = 3 \\times S_{1\\phi}$</p>
+<p>Open-delta capacity: $S_{V-V} = \\sqrt{3} \\times S_{1\\phi}$</p>
+<p>Percentage capacity: $\\frac{S_{V-V}}{S_{\\Delta\\Delta}} = \\frac{\\sqrt{3}}{3} = 0.577$</p>
+<p>Utilization factor: $\\frac{S_{V-V}}{2 \\times S_{1\\phi}} = \\frac{\\sqrt{3}}{2} = 0.866$</p>
+
+<h4>Solution:</h4>
+
+<p><strong>Step 1:</strong> Calculate original delta-delta capacity</p>
+<p>$S_{\\Delta\\Delta} = 3 \\times 15 = 45$ kVA</p>
+
+<p><strong>Step 2:</strong> Calculate open-delta (V-V) capacity</p>
+<p>$S_{V-V} = \\sqrt{3} \\times S_{1\\phi} = 1.732 \\times 15 = 25.98$ kVA</p>
+
+<p><strong>Step 3:</strong> Express as percentage of original capacity</p>
+<p>$\\text{Percentage} = \\frac{S_{V-V}}{S_{\\Delta\\Delta}} \\times 100 = \\frac{25.98}{45} \\times 100 = 57.7\\%$</p>
+
+<p><strong>Step 4:</strong> Determine kVA rating of each remaining transformer</p>
+<p>Each transformer still rated: 15 kVA</p>
+<p>Each carries: $\\frac{25.98}{2} = 12.99$ kVA (not equally loaded)</p>
+
+<p><strong>Step 5:</strong> Calculate utilization factor</p>
+<p>$\\text{Utilization factor} = \\frac{\\text{Load supplied}}{\\text{Total transformer capacity}} = \\frac{25.98}{2 \\times 15} = \\frac{25.98}{30} = 0.866$ or 86.6%</p>
+
+<p><strong>Alternative calculation:</strong></p>
+<p>$\\text{Utilization factor} = \\frac{\\sqrt{3}}{2} = \\frac{1.732}{2} = 0.866$</p>
+
+<div class="answer-highlight">
+<strong>Answers:</strong><br>
+(a) Maximum load = 25.98 kVA (57.7% of original 45 kVA)<br>
+(b) Each transformer rated 15 kVA (carries ~13 kVA)<br>
+(c) Utilization factor = 0.866 or 86.6%
+</div>
+
+<p><strong>Note:</strong> Although two transformers remain (66.7% of hardware), only 57.7% of original capacity is available because each transformer cannot be fully utilized in the V-V configuration.</p>`
+            }
+        ]
+    },
+    'generators': {
+        title: 'Generators',
+        explanation: `
+            <h3>Generator Fundamentals</h3>
+            <p>Electrical generators convert mechanical energy into electrical energy using electromagnetic induction.</p>
+            
+            <h3>Faraday's Law</h3>
+            <p>The fundamental principle is Faraday's law of electromagnetic induction:</p>
+            <p>$e = -\\frac{d\\phi}{dt}$</p>
+            <p>Where e is the induced EMF and φ is the magnetic flux.</p>
+
+            <h3>EMF in DC Generator</h3>
+            <p>The EMF generated in a DC generator is:</p>
+            <p>$E = \\frac{P\\phi ZN}{60A}$</p>
+            <p>This is the same equation as for DC motors, showing the reversible nature.</p>
+
+            <h3>Types of Generators</h3>
+            <ul>
+                <li><strong>DC Generators:</strong> Produce direct current</li>
+                <li><strong>AC Generators (Alternators):</strong> Produce alternating current</li>
+                <li><strong>Synchronous Generators:</strong> Run at constant speed</li>
+                <li><strong>Asynchronous Generators:</strong> Can run at variable speeds</li>
+            </ul>
+
+            <h3>AC Generator EMF</h3>
+            <p>For a single-phase AC generator:</p>
+            <p>$e = E_m \\sin(\\omega t)$</p>
+            <p>Where $E_m = NBA\\omega$ is the maximum EMF.</p>
+
+            <h3>Three-Phase Generator</h3>
+            <p>Three-phase generators produce three EMFs displaced by 120°:</p>
+            <ul>
+                <li>$e_R = E_m \\sin(\\omega t)$</li>
+                <li>$e_Y = E_m \\sin(\\omega t - 120°)$</li>
+                <li>$e_B = E_m \\sin(\\omega t - 240°)$</li>
+            </ul>
+        `,
+        quiz: [
+            {
+                question: "What is the fundamental principle of electrical generators?",
+                options: [
+                    "Ohm's law",
+                    "Faraday's law of electromagnetic induction",
+                    "Lenz's law",
+                    "Kirchhoff's law"
+                ],
+                correct: 1,
+                explanation: "Generators work on Faraday's law of electromagnetic induction, which states that when a conductor moves through a magnetic field (or when flux linking a coil changes), an EMF is induced. The magnitude is given by: $e = -N\\frac{d\\phi}{dt}$ where $N$ is the number of turns and $\\phi$ is the magnetic flux (Wb)."
+            },
+            {
+                question: "In a three-phase generator, the EMFs are displaced by:",
+                options: [
+                    "90°",
+                    "120°",
+                    "180°",
+                    "60°"
+                ],
+                correct: 1,
+                explanation: "In a three-phase generator, three identical coils are placed $120°$ apart in space. As the rotor rotates, the EMFs induced are: $e_R = E_m\\sin(\\omega t)$, $e_Y = E_m\\sin(\\omega t - 120°)$, $e_B = E_m\\sin(\\omega t - 240°)$. Since $\\frac{360°}{3} = 120°$, this creates a balanced three-phase system."
+            },
+            {
+                question: "The EMF equation for DC generators is the same as:",
+                options: [
+                    "AC motors",
+                    "Transformers",
+                    "DC motors",
+                    "Capacitors"
+                ],
+                correct: 2,
+                explanation: "DC generators and DC motors are reversible machines with the same construction. Both use the equation: $E = \\frac{P\\phi ZN}{60A}$ where $P$ = poles, $\\phi$ = flux/pole (Wb), $Z$ = conductors, $N$ = speed (rpm), $A$ = parallel paths. In a motor, $E$ is back EMF opposing the supply; in a generator, $E$ is the generated EMF. The only difference is the direction of energy conversion."
+            }
+        ],
+        exercises: [
+            {
+                problem: "A 6-pole DC generator has 900 conductors and runs at 1000 rpm with wave winding. If the flux per pole is 0.04 Wb, calculate the generated EMF.",
+                solution: `<h4>Given:</h4>
+<ul>
+<li>P = 6 poles</li>
+<li>Z = 900 conductors</li>
+<li>N = 1000 rpm</li>
+<li>φ = 0.04 Wb</li>
+<li>Wave winding: A = 2</li>
+</ul>
+<h4>Formula:</h4>
+<p>$E = \\frac{P\\phi ZN}{60A}$</p>
+<h4>Step-by-Step Solution:</h4>
+<p><strong>Step 1:</strong> Identify all values</p>
+<p>P = 6, φ = 0.04 Wb, Z = 900, N = 1000 rpm, A = 2</p>
+<p><strong>Step 2:</strong> Substitute in the formula</p>
+<p>$E = \\frac{6 \\times 0.04 \\times 900 \\times 1000}{60 \\times 2}$</p>
+<p><strong>Step 3:</strong> Calculate the numerator</p>
+<p>$= \\frac{216000}{120}$</p>
+<p><strong>Step 4:</strong> Final answer</p>
+<p class="answer-highlight">$E = 1800$ V or 1.8 kV</p>`
+            },
+            {
+                problem: "A single-phase AC generator has a coil with 200 turns rotating at 3000 rpm in a magnetic field. The area of the coil is 0.05 m² and the flux density is 0.8 T. Calculate the maximum EMF generated.",
+                solution: `<h4>Given:</h4>
+<ul>
+<li>N = 200 turns</li>
+<li>Speed n = 3000 rpm</li>
+<li>Area A = 0.05 m²</li>
+<li>Flux density B = 0.8 T</li>
+</ul>
+<h4>Formulas:</h4>
+<p>$\\phi = BA$</p>
+<p>$\\omega = \\frac{2\\pi n}{60}$</p>
+<p>$E_m = N\\phi\\omega$</p>
+<h4>Step-by-Step Solution:</h4>
+<p><strong>Step 1:</strong> Calculate the flux</p>
+<p>$\\phi = 0.8 \\times 0.05 = 0.04$ Wb</p>
+<p><strong>Step 2:</strong> Calculate angular velocity</p>
+<p>$\\omega = \\frac{2 \\times 3.14159 \\times 3000}{60} = \\frac{18849.54}{60} = 314.16$ rad/s</p>
+<p><strong>Step 3:</strong> Calculate maximum EMF</p>
+<p>$E_m = 200 \\times 0.04 \\times 314.16$</p>
+<p>$E_m = 8 \\times 314.16 = 2513.28$ V</p>
+<p><strong>Step 4:</strong> Final answer</p>
+<p class="answer-highlight">$E_m = 2513.3$ V or 2.51 kV</p>`
+            }
+        ]
+    },
+    'practical-transformers': {
+        title: 'Practical Transformers',
+        explanation: `
+            <h3>Understanding Practical Transformers</h3>
+            <p>Real transformers aren't perfect! Let's understand what happens in actual transformers and how to analyze them simply.</p>
+
+            <h3>1. Why Real Transformers Are Different</h3>
+            <p><strong>🔴 Problems in Real Transformers:</strong></p>
+            <ul>
+                <li><strong>Copper Wires Have Resistance:</strong> Wires get hot and waste energy (like a heater!)</li>
+                <li><strong>Not All Flux Links Both Coils:</strong> Some magnetic flux "leaks" and doesn't help transfer power</li>
+                <li><strong>Core Uses Some Energy:</strong> The iron core needs magnetizing current</li>
+                <li><strong>Core Gets Hot:</strong> Hysteresis and eddy currents create heat in the core</li>
+            </ul>
+            <p><strong>✅ What We Need to Consider:</strong></p>
+            <ul>
+                <li>R₁, R₂ = Resistance of primary and secondary windings</li>
+                <li>X₁, X₂ = Leakage reactance (flux that doesn't link both coils)</li>
+                <li>I₀ = Magnetizing current (usually 2-5% of full load)</li>
+                <li>Core losses = Energy lost as heat in the iron core</li>
+            </ul>
+
+            <h3>2. Transformer Equivalent Circuit (Simple Understanding)</h3>
+            <p><strong>Think of a transformer as:</strong></p>
+            <ul>
+                <li><strong>Two Resistors:</strong> R₁ (primary wire) and R₂ (secondary wire) - these make heat!</li>
+                <li><strong>Two Inductors:</strong> X₁ and X₂ - these are the "leaky" parts of the magnetic field</li>
+                <li><strong>Core Branch:</strong> Takes a small current to magnetize the iron core</li>
+            </ul>
+            <p><strong>💡 Simple Rule:</strong> We can "move" all components to one side (primary or secondary) to make calculations easier!</p>
+
+            <h3>3. Referring Values to One Side</h3>
+            <p><strong>Why do we do this?</strong> It's easier to calculate if everything is on the same "voltage level"</p>
+            <p><strong>The Magic Formulas (Turns Ratio a = N₁/N₂):</strong></p>
+            <p><strong>Moving Secondary to Primary Side:</strong></p>
+            <ul>
+                <li>Resistance: $R_2' = a^2 \\times R_2$ (resistance increases by square of turns ratio)</li>
+                <li>Reactance: $X_2' = a^2 \\times X_2$ (same as resistance)</li>
+                <li>Voltage: $V_2' = a \\times V_2$ (voltage increases by turns ratio)</li>
+                <li>Current: $I_2' = \\frac{I_2}{a}$ (current decreases by turns ratio)</li>
+            </ul>
+            <p><strong>📝 Example:</strong> If turns ratio a = 10, and R₂ = 0.05 Ω, then R₂' = 10² × 0.05 = 5 Ω</p>
+
+            <h3>4. Total Equivalent Impedance</h3>
+            <p><strong>Add up all impedances on one side:</strong></p>
+            <p>$R_{eq} = R_1 + R_2'$ (total resistance)</p>
+            <p>$X_{eq} = X_1 + X_2'$ (total reactance)</p>
+            <p>$Z_{eq} = \\sqrt{R_{eq}^2 + X_{eq}^2}$ (total impedance)</p>
+            <p><strong>💡 This makes calculations much simpler!</strong></p>
+
+            <h3>5. Transformer Losses (Where Energy Goes)</h3>
+            <p><strong>🔥 Copper Losses (Variable - Changes with Load):</strong></p>
+            <ul>
+                <li>Caused by: Current flowing through wire resistance (I²R)</li>
+                <li>Formula: $P_{cu} = I^2 \\times R$</li>
+                <li>When: Increases when load increases</li>
+                <li>Example: At full load = 400 W, at half load = 100 W (¼ of full load)</li>
+            </ul>
+            <p><strong>🧲 Core Losses (Constant - Same at All Loads):</strong></p>
+            <ul>
+                <li>Caused by: Magnetizing the iron core</li>
+                <li>Two types:
+                    <ul>
+                        <li><strong>Hysteresis:</strong> Energy to flip magnetic domains</li>
+                        <li><strong>Eddy Currents:</strong> Small currents circulating in the iron</li>
+                    </ul>
+                </li>
+                <li>Example: Always 100 W whether transformer is at full load or no load</li>
+            </ul>
+
+            <h3>6. Efficiency - How Good Is Your Transformer?</h3>
+            <p><strong>Simple Formula:</strong></p>
+            <p>$\\eta = \\frac{\\text{Output Power}}{\\text{Input Power}} \\times 100\\%$</p>
+            <p>$\\eta = \\frac{\\text{Output Power}}{\\text{Output Power + Losses}} \\times 100\\%$</p>
+            <p><strong>📊 Typical Values:</strong></p>
+            <ul>
+                <li>Small transformers (< 1 kVA): 85-95%</li>
+                <li>Medium transformers (1-100 kVA): 95-98%</li>
+                <li>Large transformers (> 100 kVA): 98-99.5%</li>
+            </ul>
+
+            <h3>7. Maximum Efficiency - The Sweet Spot! 🎯</h3>
+            <p><strong>Secret Formula:</strong> Efficiency is MAXIMUM when:</p>
+            <p class="answer-highlight">Copper Losses = Core Losses</p>
+            <p><strong>Why?</strong> Core losses are constant, copper losses increase with load</p>
+            <p><strong>At what load?</strong> Usually happens at 50-70% of full load</p>
+            <p><strong>📝 Example:</strong></p>
+            <ul>
+                <li>Core losses = 100 W (constant)</li>
+                <li>Full-load copper losses = 400 W</li>
+                <li>For maximum efficiency: $x^2 \\times 400 = 100$</li>
+                <li>Solve: $x = 0.5$ → Maximum efficiency at 50% load (10 kVA out of 20 kVA)</li>
+            </ul>
+
+            <h3>8. Voltage Regulation - Does Voltage Drop Under Load?</h3>
+            <p><strong>What is it?</strong> The voltage "sag" when you connect a load</p>
+            <p><strong>Formula:</strong></p>
+            <p>$\\text{Regulation} = \\frac{V_{no-load} - V_{full-load}}{V_{full-load}} \\times 100\\%$</p>
+            <p><strong>Better Regulation = Smaller Number</strong></p>
+            <ul>
+                <li>0-3%: Excellent (stiff voltage)</li>
+                <li>3-5%: Good</li>
+                <li>> 5%: Poor (voltage drops too much)</li>
+            </ul>
+            <p><strong>🔍 Important Facts:</strong></p>
+            <ul>
+                <li><strong>Lagging Power Factor:</strong> Voltage always drops (positive regulation)</li>
+                <li><strong>Leading Power Factor:</strong> Voltage can actually RISE! (negative regulation)</li>
+                <li><strong>Unity Power Factor:</strong> Minimum voltage drop</li>
+            </ul>
+
+            <h3>9. Per-Unit System - The Engineer's Shortcut</h3>
+            <p><strong>Why use it?</strong> Makes numbers easier to compare</p>
+            <p><strong>How it works:</strong></p>
+            <p>$\\text{Per-Unit Value} = \\frac{\\text{Actual Value}}{\\text{Base Value}}$</p>
+            <p><strong>Benefits:</strong></p>
+            <ul>
+                <li>✅ Values typically between 0 and 1 (easy to work with)</li>
+                <li>✅ Easy to compare different size transformers</li>
+                <li>✅ Simpler calculations</li>
+            </ul>
+            <p><strong>📝 Example:</strong> If actual impedance = 13.4 Ω and base impedance = 100 Ω:</p>
+            <p>Z<sub>pu</sub> = 13.4/100 = 0.134 pu = 13.4%</p>
+
+            <h3>10. Testing Transformers</h3>
+            <p><strong>🔬 Two Main Tests:</strong></p>
+            <p><strong>Open Circuit Test (No-Load Test):</strong></p>
+            <ul>
+                <li>What: Apply rated voltage to primary, leave secondary open</li>
+                <li>Finds: Core losses and magnetizing parameters</li>
+                <li>Why: Core losses are constant regardless of load</li>
+            </ul>
+            <p><strong>Short Circuit Test:</strong></p>
+            <ul>
+                <li>What: Short the secondary, apply low voltage to primary</li>
+                <li>Finds: Winding resistances and leakage reactances</li>
+                <li>Why: Safe way to measure copper losses at full current</li>
+            </ul>
+
+            <h3>11. Practical Tips 💡</h3>
+            <p><strong>Good transformer characteristics:</strong></p>
+            <ul>
+                <li>✅ Low voltage regulation (< 3%)</li>
+                <li>✅ High efficiency (> 95%)</li>
+                <li>✅ Low temperature rise (< 50°C)</li>
+                <li>✅ Low noise and vibration</li>
+            </ul>
+            <p><strong>Common Problems:</strong></p>
+            <ul>
+                <li>🔴 Overheating → Check for overload or blocked cooling</li>
+                <li>🔴 Buzzing noise → Loose laminations or overexcitation</li>
+                <li>🔴 Low efficiency → High losses, check connections</li>
+                <li>🔴 High regulation → High impedance or poor design</li>
+            </ul>
+
+            <h3>12. Quick Reference Formulas</h3>
+            <p><strong>Referring to Primary:</strong> Multiply by a²</p>
+            <p><strong>Referring to Secondary:</strong> Divide by a²</p>
+            <p><strong>Efficiency:</strong> η = Output/(Output + Losses) × 100%</p>
+            <p><strong>Regulation:</strong> % = [(V<sub>NL</sub> - V<sub>FL</sub>)/V<sub>FL</sub>] × 100%</p>
+            <p><strong>Max Efficiency:</strong> P<sub>cu</sub> = P<sub>core</sub></p>
+        `,
+        quiz: [
+            {
+                question: "What is the main difference between exact and approximate equivalent circuits?",
+                options: [
+                    "The number of windings",
+                    "The position of the exciting branch",
+                    "The transformer ratio",
+                    "The frequency of operation"
+                ],
+                correct: 1,
+                explanation: "In the approximate equivalent circuit, the exciting branch (shunt elements R₀ and X₀) is moved to the input side for simplification, while in the exact circuit it's between primary and secondary impedances."
+            },
+            {
+                question: "When referring secondary resistance R₂ to primary side with turns ratio 'a', it becomes:",
+                options: [
+                    "R₂/a",
+                    "R₂/a²",
+                    "aR₂",
+                    "a²R₂"
+                ],
+                correct: 3,
+                explanation: "When referring impedances to the other side, resistance transforms as R₂' = a²R₂ (to primary) or R₁' = R₁/a² (to secondary), where a = N₁/N₂."
+            },
+            {
+                question: "For maximum efficiency in a transformer, which condition must be satisfied?",
+                options: [
+                    "Core losses = Copper losses",
+                    "Primary voltage = Secondary voltage",
+                    "Input power = Output power",
+                    "Load power factor = 1"
+                ],
+                correct: 0,
+                explanation: "Maximum efficiency occurs when variable copper losses equal constant core losses: P_cu = P_core. This typically happens at 50-70% of full load."
+            },
+            {
+                question: "In the simplified equivalent circuit, what is typically neglected?",
+                options: [
+                    "Winding resistance",
+                    "Leakage reactance",
+                    "Exciting current",
+                    "Load current"
+                ],
+                correct: 2,
+                explanation: "The simplified equivalent circuit neglects the exciting current (I₀) because it's very small (2-5%) compared to load current, making negligible error in calculations."
+            }
+        ],
+        exercises: [
+            {
+                problem: "A 10 kVA, 2200/220 V transformer has the following parameters: R₁ = 3 Ω, R₂ = 0.03 Ω, X₁ = 6 Ω, X₂ = 0.06 Ω. Calculate the equivalent resistance and reactance referred to the primary side.",
+                solution: `<h4>Given:</h4>
+<ul>
+<li>Rating: 10 kVA</li>
+<li>V₁ = 2200 V, V₂ = 220 V</li>
+<li>R₁ = 3 Ω, R₂ = 0.03 Ω</li>
+<li>X₁ = 6 Ω, X₂ = 0.06 Ω</li>
+</ul>
+<h4>Step-by-Step Solution:</h4>
+<p><strong>Step 1:</strong> Calculate turns ratio</p>
+<p>$a = \\frac{N_1}{N_2} = \\frac{V_1}{V_2} = \\frac{2200}{220} = 10$</p>
+<p><strong>Step 2:</strong> Refer R₂ to primary side</p>
+<p>$R_2' = a^2 R_2 = 10^2 \\times 0.03 = 100 \\times 0.03 = 3$ Ω</p>
+<p><strong>Step 3:</strong> Calculate total equivalent resistance (primary)</p>
+<p>$R_{eq1} = R_1 + R_2' = 3 + 3 = 6$ Ω</p>
+<p><strong>Step 4:</strong> Refer X₂ to primary side</p>
+<p>$X_2' = a^2 X_2 = 10^2 \\times 0.06 = 100 \\times 0.06 = 6$ Ω</p>
+<p><strong>Step 5:</strong> Calculate total equivalent reactance (primary)</p>
+<p>$X_{eq1} = X_1 + X_2' = 6 + 6 = 12$ Ω</p>
+<p><strong>Step 6:</strong> Calculate total equivalent impedance</p>
+<p>$Z_{eq1} = \\sqrt{R_{eq1}^2 + X_{eq1}^2} = \\sqrt{6^2 + 12^2} = \\sqrt{36 + 144} = \\sqrt{180} = 13.42$ Ω</p>
+<p class="answer-highlight">R<sub>eq1</sub> = 6 Ω, X<sub>eq1</sub> = 12 Ω, Z<sub>eq1</sub> = 13.42 Ω</p>`
+            },
+            {
+                problem: "A transformer has core losses of 100 W and full-load copper losses of 400 W. The transformer rating is 20 kVA at 0.8 power factor lagging. Calculate: (a) Full-load efficiency, (b) The load at which maximum efficiency occurs.",
+                solution: `<h4>Given:</h4>
+<ul>
+<li>Core losses P<sub>core</sub> = 100 W</li>
+<li>Full-load copper losses P<sub>cu,FL</sub> = 400 W</li>
+<li>Rating S = 20 kVA</li>
+<li>Power factor cos φ = 0.8 lagging</li>
+</ul>
+<h4>Part (a): Full-Load Efficiency</h4>
+<p><strong>Step 1:</strong> Calculate full-load output power</p>
+<p>$P_{output} = S \\times \\cos\\phi = 20000 \\times 0.8 = 16000$ W</p>
+<p><strong>Step 2:</strong> Calculate total losses at full load</p>
+<p>$P_{losses} = P_{core} + P_{cu,FL} = 100 + 400 = 500$ W</p>
+<p><strong>Step 3:</strong> Calculate input power</p>
+<p>$P_{input} = P_{output} + P_{losses} = 16000 + 500 = 16500$ W</p>
+<p><strong>Step 4:</strong> Calculate efficiency</p>
+<p>$\\eta_{FL} = \\frac{P_{output}}{P_{input}} \\times 100\\% = \\frac{16000}{16500} \\times 100\\% = 96.97\\%$</p>
+<h4>Part (b): Load for Maximum Efficiency</h4>
+<p><strong>Step 5:</strong> Apply maximum efficiency condition</p>
+<p>At maximum efficiency: $P_{cu} = P_{core}$</p>
+<p>$x^2 \\times P_{cu,FL} = P_{core}$</p>
+<p>Where x is the fraction of full load</p>
+<p><strong>Step 6:</strong> Solve for x</p>
+<p>$x^2 = \\frac{P_{core}}{P_{cu,FL}} = \\frac{100}{400} = 0.25$</p>
+<p>$x = \\sqrt{0.25} = 0.5$</p>
+<p><strong>Step 7:</strong> Calculate load at maximum efficiency</p>
+<p>Load = $x \\times$ Full Load = $0.5 \\times 20$ kVA = 10 kVA</p>
+<p class="answer-highlight">(a) Full-load efficiency = 96.97%<br>(b) Maximum efficiency at 10 kVA (50% of full load)</p>`
+            },
+            {
+                problem: "A 50 kVA, 4400/220 V transformer has equivalent resistance of 0.6% and equivalent reactance of 3% (in per-unit). A load of 40 kW at 0.8 power factor lagging is connected to the secondary. Calculate the voltage regulation.",
+                solution: `<h4>Given:</h4>
+<ul>
+<li>Rating S = 50 kVA</li>
+<li>V₁ = 4400 V, V₂ = 220 V</li>
+<li>R<sub>eq</sub> = 0.6% = 0.006 p.u.</li>
+<li>X<sub>eq</sub> = 3% = 0.03 p.u.</li>
+<li>Load P = 40 kW</li>
+<li>Power factor cos φ₂ = 0.8 lagging</li>
+</ul>
+<h4>Step-by-Step Solution:</h4>
+<p><strong>Step 1:</strong> Calculate load kVA</p>
+<p>$S_{load} = \\frac{P}{\\cos\\phi} = \\frac{40}{0.8} = 50$ kVA (Full load)</p>
+<p><strong>Step 2:</strong> Calculate sin φ₂</p>
+<p>$\\sin\\phi_2 = \\sqrt{1 - \\cos^2\\phi_2} = \\sqrt{1 - 0.8^2} = \\sqrt{1 - 0.64} = \\sqrt{0.36} = 0.6$</p>
+<p><strong>Step 3:</strong> Calculate per-unit voltage drop</p>
+<p>Since load = full load, x = 1</p>
+<p>$\\Delta V_{pu} = x(R_{eq}\\cos\\phi_2 + X_{eq}\\sin\\phi_2)$</p>
+<p>$\\Delta V_{pu} = 1 \\times (0.006 \\times 0.8 + 0.03 \\times 0.6)$</p>
+<p>$\\Delta V_{pu} = 0.0048 + 0.018 = 0.0228$ p.u.</p>
+<p><strong>Step 4:</strong> Convert to percentage</p>
+<p>Voltage Regulation $= \\Delta V_{pu} \\times 100\\% = 0.0228 \\times 100\\% = 2.28\\%$</p>
+<p><strong>Step 5:</strong> Calculate actual voltage drop</p>
+<p>$\\Delta V = 0.0228 \\times 220 = 5.016$ V</p>
+<p>No-load secondary voltage $= 220 + 5.016 = 225.016$ V</p>
+<p class="answer-highlight">Voltage Regulation = 2.28%<br>Voltage drop = 5.02 V</p>`
+            }
+        ]
+    }
+};
+
+// DOM Elements
+const elements = {
+    // Theme
+    themeToggle: document.getElementById('themeToggle'),
+    
+    // Views
+    topicSelector: document.getElementById('topicSelector'),
+    explanationView: document.getElementById('explanationView'),
+    quizView: document.getElementById('quizView'),
+    exercisesView: document.getElementById('exercisesView'),
+    
+    // Navigation
+    backFromExplanation: document.getElementById('backFromExplanation'),
+    backFromQuiz: document.getElementById('backFromQuiz'),
+    backFromExercises: document.getElementById('backFromExercises'),
+    
+    // Content
+    explanationTitle: document.getElementById('explanationTitle'),
+    explanationContent: document.getElementById('explanationContent'),
+    quizTitle: document.getElementById('quizTitle'),
+    quizContent: document.getElementById('quizContent'),
+    exercisesTitle: document.getElementById('exercisesTitle'),
+    exercisesContent: document.getElementById('exercisesContent')
+};
+
+// Initialize Application
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+    setupEventListeners();
+});
+
+async function initializeApp() {
+    // Load topics index
+    await loadTopicsIndex();
+    
+    showView('topicSelector');
+    renderMath();
+    
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.body.classList.remove('dark-theme');
+        if (elements.themeToggle) {
+            elements.themeToggle.querySelector('.theme-icon').textContent = '☀️';
+        }
+    }
+}
+
+function setupEventListeners() {
+    // Theme toggle
+    if (elements.themeToggle) {
+        elements.themeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    // Navigation
+    if (elements.backFromExplanation) {
+        elements.backFromExplanation.addEventListener('click', () => showView('topicSelector'));
+    }
+    if (elements.backFromQuiz) {
+        elements.backFromQuiz.addEventListener('click', () => showView('topicSelector'));
+    }
+    if (elements.backFromExercises) {
+        elements.backFromExercises.addEventListener('click', () => showView('topicSelector'));
+    }
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('dark-theme');
+    const isDark = document.body.classList.contains('dark-theme');
+    elements.themeToggle.querySelector('.theme-icon').textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
+
+function showView(viewName) {
+    // Hide all views
+    document.querySelectorAll('.view').forEach(view => {
+        view.classList.remove('active');
+    });
+    
+    // Show selected view
+    elements[viewName].classList.add('active');
+    currentView = viewName;
+}
+
+async function selectTopic(topicId, mode) {
+    currentTopic = topicId;
+    
+    // Load topic data if not already loaded
+    const topic = await loadTopicData(topicId);
+    
+    if (!topic) {
+        console.error('Failed to load topic data for:', topicId);
+        alert('Error loading topic data. Please try again.');
+        return;
+    }
+    
+    if (mode === 'explain') {
+        elements.explanationTitle.textContent = topic.title;
+        elements.explanationContent.innerHTML = topic.explanation;
+        showView('explanationView');
+        renderMath();
+    } else if (mode === 'quiz') {
+        elements.quizTitle.textContent = `${topic.title} Quiz`;
+        generateQuiz(topic.quiz);
+        showView('quizView');
+        renderMath();
+    } else if (mode === 'exercises') {
+        elements.exercisesTitle.textContent = `${topic.title} - Practice Exercises`;
+        generateExercises(topic.exercises);
+        showView('exercisesView');
+        renderMath();
+    }
+}
+
+function generateExercises(exercises) {
+    let html = '<div class="exercises-container">';
+    
+    exercises.forEach((exercise, index) => {
+        html += `
+            <div class="exercise-card">
+                <h3>Exercise ${index + 1}</h3>
+                <div class="exercise-problem">
+                    <strong>Problem:</strong>
+                    <p>${exercise.problem}</p>
+                </div>
+                <button class="btn btn-outline toggle-solution" onclick="toggleSolution(${index})">
+                    Show Solution
+                </button>
+                <div id="solution-${index}" class="exercise-solution" style="display: none;">
+                    ${exercise.solution}
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    elements.exercisesContent.innerHTML = html;
+}
+
+function toggleSolution(index) {
+    const solution = document.getElementById(`solution-${index}`);
+    const button = event.target;
+    
+    if (solution.style.display === 'none') {
+        solution.style.display = 'block';
+        button.textContent = 'Hide Solution';
+    } else {
+        solution.style.display = 'none';
+        button.textContent = 'Show Solution';
+    }
+    
+    // Re-render math after showing solution
+    renderMath();
+}
+
+// Make toggleSolution global
+window.toggleSolution = toggleSolution;
+
+function generateQuiz(questions) {
+    let html = '';
+    let currentQuestion = 0;
+    let answered = [];
+    
+    function renderQuestion(index) {
+        const question = questions[index];
+        let optionsHtml = '';
+        
+        question.options.forEach((option, i) => {
+            optionsHtml += `
+                <div class="quiz-option" data-option="${i}">
+                    ${option}
+                </div>
+            `;
+        });
+        
+        return `
+            <div class="quiz-question" data-question="${index}">
+                <h3>Question ${index + 1} of ${questions.length}</h3>
+                <p>${question.question}</p>
+                <div class="quiz-options">
+                    ${optionsHtml}
+                </div>
+                <div id="explanation-${index}" class="quiz-explanation" style="display: none;"></div>
+            </div>
+        `;
+    }
+    
+
+    
+    function nextQuestion() {
+        if (currentQuestion < questions.length - 1) {
+            currentQuestion++;
+            html = renderQuestion(currentQuestion);
+            html += `
+                <div class="quiz-actions">
+                    <button class="btn btn-outline" onclick="previousQuestion()">Previous</button>
+                    ${currentQuestion < questions.length - 1 ? '<button class="btn btn-primary" onclick="nextQuestion()" disabled id="nextBtn">Next</button>' : ''}
+                </div>
+            `;
+            elements.quizContent.innerHTML = html;
+            setupQuizListeners();
+            renderMath();
+        }
+    }
+    
+    function previousQuestion() {
+        if (currentQuestion > 0) {
+            currentQuestion--;
+            html = renderQuestion(currentQuestion);
+            html += `
+                <div class="quiz-actions">
+                    ${currentQuestion > 0 ? '<button class="btn btn-outline" onclick="previousQuestion()">Previous</button>' : ''}
+                    ${currentQuestion < questions.length - 1 ? '<button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn">Next</button>' : ''}
+                </div>
+            `;
+            elements.quizContent.innerHTML = html;
+            setupQuizListeners();
+            
+            // Restore previous answer
+            if (answered[currentQuestion] !== undefined) {
+                const options = document.querySelectorAll('.quiz-option');
+                const userAnswer = answered[currentQuestion];
+                const correctAnswer = questions[currentQuestion].correct;
+                const question = questions[currentQuestion];
+                
+                // Show the answer state
+                if (userAnswer === correctAnswer) {
+                    options[userAnswer].classList.add('correct');
+                } else {
+                    options[userAnswer].classList.add('incorrect');
+                    options[correctAnswer].classList.add('correct');
+                }
+                
+                // Show explanation if it exists
+                const explanationDiv = document.getElementById(`explanation-${currentQuestion}`);
+                if (explanationDiv && question.explanation) {
+                    explanationDiv.innerHTML = `
+                        <div class="review-explanation" style="margin-top: 1rem;">
+                            <strong>Explanation:</strong> ${question.explanation}
+                        </div>
+                    `;
+                    explanationDiv.style.display = 'block';
+                }
+                
+                // Disable all options since already answered
+                options.forEach(opt => {
+                    opt.style.pointerEvents = 'none';
+                });
+                
+                if (currentQuestion < questions.length - 1) {
+                    document.getElementById('nextBtn').disabled = false;
+                }
+            }
+            renderMath();
+        }
+    }
+    
+    function setupQuizListeners() {
+        const options = document.querySelectorAll('.quiz-option');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        options.forEach((option, index) => {
+            option.addEventListener('click', function() {
+                // Prevent re-clicking if already answered
+                if (answered[currentQuestion] !== undefined) {
+                    return;
+                }
+                
+                // Remove previous selection
+                options.forEach(opt => opt.classList.remove('selected'));
+                // Add current selection
+                this.classList.add('selected');
+                // Store answer
+                answered[currentQuestion] = index;
+                // Enable next button (if not last question)
+                if (nextBtn) {
+                    nextBtn.disabled = false;
+                }
+                
+                // Show correct/incorrect immediately
+                const correctIndex = questions[currentQuestion].correct;
+                const question = questions[currentQuestion];
+                
+                if (index === correctIndex) {
+                    // User selected correct answer
+                    this.classList.add('correct');
+                    this.classList.remove('selected');
+                } else {
+                    // User selected wrong answer
+                    this.classList.add('incorrect');
+                    this.classList.remove('selected');
+                    // Highlight the correct answer
+                    options[correctIndex].classList.add('correct');
+                }
+                
+                // Show explanation if it exists
+                const explanationDiv = document.getElementById(`explanation-${currentQuestion}`);
+                if (explanationDiv && question.explanation) {
+                    explanationDiv.innerHTML = `
+                        <div class="review-explanation" style="margin-top: 1rem;">
+                            <strong>Explanation:</strong> ${question.explanation}
+                        </div>
+                    `;
+                    explanationDiv.style.display = 'block';
+                    renderMath();
+                }
+                
+                // Disable all options after selection
+                options.forEach(opt => {
+                    opt.style.pointerEvents = 'none';
+                });
+            });
+        });
+    }
+    
+    // Make functions global
+    window.nextQuestion = nextQuestion;
+    window.previousQuestion = previousQuestion;
+    
+    // Start quiz
+    html = renderQuestion(0);
+    html += `
+        <div class="quiz-actions">
+            ${questions.length > 1 ? '<button class="btn btn-primary" onclick="nextQuestion()" disabled id="nextBtn">Next</button>' : ''}
+        </div>
+    `;
+    
+    elements.quizContent.innerHTML = html;
+    setupQuizListeners();
+}
+
+function renderMath() {
+    // Render KaTeX math expressions
+    if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false}
+            ]
+        });
+    }
+}
+
+// Make selectTopic and toggleSolution globally accessible
+window.selectTopic = selectTopic;
+window.toggleSolution = toggleSolution;

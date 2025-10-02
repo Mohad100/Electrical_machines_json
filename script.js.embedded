@@ -1,0 +1,647 @@
+// Application State
+let currentView = 'topicSelector';
+let currentTopic = null;
+
+// Topic Data
+const topicData = {
+    'dc-motors': {
+        title: 'DC Motors',
+        explanation: `
+            <h3>DC Motor Fundamentals</h3>
+            <p>A DC motor is an electrical machine that converts direct current electrical energy into mechanical energy through the interaction of magnetic fields.</p>
+            
+            <h3>Basic Principle</h3>
+            <p>DC motors operate on the principle that when a current-carrying conductor is placed in a magnetic field, it experiences a force. This is described by the equation:</p>
+            <p>$F = BIL$</p>
+            <p>Where:</p>
+            <ul>
+                <li>F = Force (N)</li>
+                <li>B = Magnetic flux density (T)</li>
+                <li>I = Current (A)</li>
+                <li>L = Length of conductor (m)</li>
+            </ul>
+
+            <h3>EMF Equation</h3>
+            <p>The back EMF generated in a DC motor is given by:</p>
+            <p>$E_b = \\frac{P\\phi ZN}{60A}$</p>
+            <p>Where:</p>
+            <ul>
+                <li>$E_b$ = Back EMF (V)</li>
+                <li>P = Number of poles</li>
+                <li>$\\phi$ = Flux per pole (Wb)</li>
+                <li>Z = Total number of conductors</li>
+                <li>N = Speed (rpm)</li>
+                <li>A = Number of parallel paths</li>
+            </ul>
+
+            <h3>Types of DC Motors</h3>
+            <ul>
+                <li><strong>Series Motor:</strong> Field winding connected in series with armature</li>
+                <li><strong>Shunt Motor:</strong> Field winding connected in parallel with armature</li>
+                <li><strong>Compound Motor:</strong> Combination of series and shunt characteristics</li>
+            </ul>
+
+            <h3>Torque Equation</h3>
+            <p>The torque developed by a DC motor is:</p>
+            <p>$T = \\frac{P\\phi ZI_a}{2\\pi A}$</p>
+            <p>Where $I_a$ is the armature current.</p>
+        `,
+        quiz: [
+            {
+                question: "What is the basic principle of DC motor operation?",
+                options: [
+                    "Electromagnetic induction",
+                    "Force on current-carrying conductor in magnetic field",
+                    "Transformer action",
+                    "Capacitive coupling"
+                ],
+                correct: 1
+            },
+            {
+                question: "In the EMF equation $E_b = \\frac{P\\phi ZN}{60A}$, what does 'A' represent?",
+                options: [
+                    "Armature current",
+                    "Number of parallel paths",
+                    "Cross-sectional area",
+                    "Acceleration"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which DC motor type has field winding in series with armature?",
+                options: [
+                    "Shunt motor",
+                    "Compound motor",
+                    "Series motor",
+                    "Synchronous motor"
+                ],
+                correct: 2
+            }
+        ]
+    },
+    'ac-motors': {
+        title: 'AC Motors',
+        explanation: `
+            <h3>AC Motor Fundamentals</h3>
+            <p>AC motors convert alternating current electrical energy into mechanical energy using rotating magnetic fields.</p>
+            
+            <h3>Rotating Magnetic Field</h3>
+            <p>The fundamental principle of AC motors is the creation of a rotating magnetic field by three-phase currents displaced by 120°. The synchronous speed is given by:</p>
+            <p>$N_s = \\frac{120f}{P}$</p>
+            <p>Where:</p>
+            <ul>
+                <li>$N_s$ = Synchronous speed (rpm)</li>
+                <li>f = Frequency (Hz)</li>
+                <li>P = Number of poles</li>
+            </ul>
+
+            <h3>Types of AC Motors</h3>
+            <ul>
+                <li><strong>Synchronous Motors:</strong> Run at synchronous speed</li>
+                <li><strong>Induction Motors:</strong> Run at less than synchronous speed</li>
+            </ul>
+
+            <h3>Slip in Induction Motors</h3>
+            <p>Slip is the difference between synchronous speed and rotor speed:</p>
+            <p>$s = \\frac{N_s - N_r}{N_s} \\times 100\\%$</p>
+            <p>Where $N_r$ is the rotor speed.</p>
+
+            <h3>Torque-Slip Characteristics</h3>
+            <p>The torque developed by an induction motor is:</p>
+            <p>$T = \\frac{K \\cdot s \\cdot E_2^2 \\cdot R_2}{R_2^2 + (s \\cdot X_2)^2}$</p>
+            <p>Where K is a constant, $E_2$ is rotor EMF, $R_2$ is rotor resistance, and $X_2$ is rotor reactance.</p>
+        `,
+        quiz: [
+            {
+                question: "What creates the rotating magnetic field in AC motors?",
+                options: [
+                    "Single-phase current",
+                    "Three-phase currents displaced by 120°",
+                    "DC current",
+                    "Permanent magnets"
+                ],
+                correct: 1
+            },
+            {
+                question: "For a 4-pole, 50Hz AC motor, what is the synchronous speed?",
+                options: [
+                    "1500 rpm",
+                    "3000 rpm",
+                    "1000 rpm",
+                    "750 rpm"
+                ],
+                correct: 0
+            },
+            {
+                question: "What is slip in an induction motor?",
+                options: [
+                    "Rotor speed",
+                    "Difference between synchronous and rotor speed",
+                    "Stator speed",
+                    "Magnetic field strength"
+                ],
+                correct: 1
+            }
+        ]
+    },
+    'transformers': {
+        title: 'Transformers',
+        explanation: `
+            <h3>Transformer Fundamentals</h3>
+            <p>A transformer is a static electrical machine that transfers electrical energy from one circuit to another through electromagnetic induction.</p>
+            
+            <h3>Working Principle</h3>
+            <p>Transformers work on the principle of mutual induction between two or more windings linked by a common magnetic flux.</p>
+
+            <h3>EMF Equation</h3>
+            <p>The EMF induced in each winding is given by:</p>
+            <p>$E = 4.44 \\cdot f \\cdot N \\cdot \\phi_m$</p>
+            <p>Where:</p>
+            <ul>
+                <li>E = RMS value of EMF (V)</li>
+                <li>f = Frequency (Hz)</li>
+                <li>N = Number of turns</li>
+                <li>$\\phi_m$ = Maximum flux (Wb)</li>
+            </ul>
+
+            <h3>Transformation Ratio</h3>
+            <p>The voltage transformation ratio is:</p>
+            <p>$K = \\frac{V_1}{V_2} = \\frac{N_1}{N_2} = \\frac{I_2}{I_1}$</p>
+            <p>Where subscript 1 refers to primary and 2 to secondary.</p>
+
+            <h3>Types of Transformers</h3>
+            <ul>
+                <li><strong>Step-up:</strong> Secondary voltage > Primary voltage</li>
+                <li><strong>Step-down:</strong> Secondary voltage < Primary voltage</li>
+                <li><strong>Isolation:</strong> 1:1 ratio for electrical isolation</li>
+            </ul>
+
+            <h3>Efficiency</h3>
+            <p>Transformer efficiency is given by:</p>
+            <p>$\\eta = \\frac{Output}{Input} = \\frac{V_2I_2\\cos\\phi_2}{V_2I_2\\cos\\phi_2 + P_{losses}} \\times 100\\%$</p>
+        `,
+        quiz: [
+            {
+                question: "What is the working principle of a transformer?",
+                options: [
+                    "Electromagnetic induction",
+                    "Electrostatic induction",
+                    "Magnetic coupling",
+                    "Direct conduction"
+                ],
+                correct: 0
+            },
+            {
+                question: "In the EMF equation $E = 4.44 \\cdot f \\cdot N \\cdot \\phi_m$, what does the constant 4.44 represent?",
+                options: [
+                    "Form factor times √2",
+                    "π√2",
+                    "2π√2",
+                    "Mathematical constant"
+                ],
+                correct: 0
+            },
+            {
+                question: "If a transformer has a turns ratio of 10:1, what type is it?",
+                options: [
+                    "Step-up",
+                    "Step-down",
+                    "Isolation",
+                    "Auto-transformer"
+                ],
+                correct: 1
+            }
+        ]
+    },
+    'generators': {
+        title: 'Generators',
+        explanation: `
+            <h3>Generator Fundamentals</h3>
+            <p>Electrical generators convert mechanical energy into electrical energy using electromagnetic induction.</p>
+            
+            <h3>Faraday's Law</h3>
+            <p>The fundamental principle is Faraday's law of electromagnetic induction:</p>
+            <p>$e = -\\frac{d\\phi}{dt}$</p>
+            <p>Where e is the induced EMF and φ is the magnetic flux.</p>
+
+            <h3>EMF in DC Generator</h3>
+            <p>The EMF generated in a DC generator is:</p>
+            <p>$E = \\frac{P\\phi ZN}{60A}$</p>
+            <p>This is the same equation as for DC motors, showing the reversible nature.</p>
+
+            <h3>Types of Generators</h3>
+            <ul>
+                <li><strong>DC Generators:</strong> Produce direct current</li>
+                <li><strong>AC Generators (Alternators):</strong> Produce alternating current</li>
+                <li><strong>Synchronous Generators:</strong> Run at constant speed</li>
+                <li><strong>Asynchronous Generators:</strong> Can run at variable speeds</li>
+            </ul>
+
+            <h3>AC Generator EMF</h3>
+            <p>For a single-phase AC generator:</p>
+            <p>$e = E_m \\sin(\\omega t)$</p>
+            <p>Where $E_m = NBA\\omega$ is the maximum EMF.</p>
+
+            <h3>Three-Phase Generator</h3>
+            <p>Three-phase generators produce three EMFs displaced by 120°:</p>
+            <ul>
+                <li>$e_R = E_m \\sin(\\omega t)$</li>
+                <li>$e_Y = E_m \\sin(\\omega t - 120°)$</li>
+                <li>$e_B = E_m \\sin(\\omega t - 240°)$</li>
+            </ul>
+        `,
+        quiz: [
+            {
+                question: "What is the fundamental principle of electrical generators?",
+                options: [
+                    "Ohm's law",
+                    "Faraday's law of electromagnetic induction",
+                    "Lenz's law",
+                    "Kirchhoff's law"
+                ],
+                correct: 1
+            },
+            {
+                question: "In a three-phase generator, the EMFs are displaced by:",
+                options: [
+                    "90°",
+                    "120°",
+                    "180°",
+                    "60°"
+                ],
+                correct: 1
+            },
+            {
+                question: "The EMF equation for DC generators is the same as:",
+                options: [
+                    "AC motors",
+                    "Transformers",
+                    "DC motors",
+                    "Capacitors"
+                ],
+                correct: 2
+            }
+        ]
+    }
+};
+
+// DOM Elements
+const elements = {
+    // Modal
+    apiKeyModal: document.getElementById('apiKeyModal'),
+    apiKeyInput: document.getElementById('apiKeyInput'),
+    saveApiKey: document.getElementById('saveApiKey'),
+    closeModal: document.getElementById('closeModal'),
+    
+    // Theme
+    themeToggle: document.getElementById('themeToggle'),
+    
+    // Views
+    topicSelector: document.getElementById('topicSelector'),
+    explanationView: document.getElementById('explanationView'),
+    quizView: document.getElementById('quizView'),
+    problemSolverView: document.getElementById('problemSolverView'),
+    
+    // Navigation
+    backFromExplanation: document.getElementById('backFromExplanation'),
+    backFromQuiz: document.getElementById('backFromQuiz'),
+    backFromProblemSolver: document.getElementById('backFromProblemSolver'),
+    problemSolverBtn: document.getElementById('problemSolverBtn'),
+    
+    // Content
+    explanationTitle: document.getElementById('explanationTitle'),
+    explanationContent: document.getElementById('explanationContent'),
+    quizTitle: document.getElementById('quizTitle'),
+    quizContent: document.getElementById('quizContent'),
+    
+    // Chat
+    chatMessages: document.getElementById('chatMessages'),
+    chatInput: document.getElementById('chatInput'),
+    sendMessage: document.getElementById('sendMessage'),
+    sendText: document.getElementById('sendText'),
+    loadingSpinner: document.getElementById('loadingSpinner')
+};
+
+// Initialize Application
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+    setupEventListeners();
+    checkApiKey();
+});
+
+function initializeApp() {
+    showView('topicSelector');
+    renderMath();
+}
+
+function setupEventListeners() {
+    // Modal events
+    elements.saveApiKey.addEventListener('click', saveApiKey);
+    elements.closeModal.addEventListener('click', closeModal);
+    elements.apiKeyModal.addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+    
+    // Theme toggle
+    elements.themeToggle.addEventListener('click', toggleTheme);
+    
+    // Navigation
+    elements.backFromExplanation.addEventListener('click', () => showView('topicSelector'));
+    elements.backFromQuiz.addEventListener('click', () => showView('topicSelector'));
+    elements.backFromProblemSolver.addEventListener('click', () => showView('topicSelector'));
+    elements.problemSolverBtn.addEventListener('click', () => showView('problemSolverView'));
+    
+    // Chat
+    elements.sendMessage.addEventListener('click', sendMessage);
+    elements.chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+    
+    // API Key input
+    elements.apiKeyInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            saveApiKey();
+        }
+    });
+}
+
+function checkApiKey() {
+    apiKey = localStorage.getItem('gemini-api-key');
+    if (apiKey) {
+        isAiReady = true;
+    } else {
+        showApiKeyModal();
+    }
+}
+
+function showApiKeyModal() {
+    elements.apiKeyModal.classList.add('active');
+    elements.apiKeyInput.focus();
+}
+
+function closeModal() {
+    elements.apiKeyModal.classList.remove('active');
+}
+
+function saveApiKey() {
+    const key = elements.apiKeyInput.value.trim();
+    if (key) {
+        apiKey = key;
+        localStorage.setItem('gemini-api-key', key);
+        isAiReady = true;
+        closeModal();
+        elements.apiKeyInput.value = '';
+    } else {
+        alert('Please enter a valid API key');
+    }
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('dark-theme');
+    const isDark = document.body.classList.contains('dark-theme');
+    elements.themeToggle.querySelector('.theme-icon').textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
+
+function showView(viewName) {
+    // Hide all views
+    document.querySelectorAll('.view').forEach(view => {
+        view.classList.remove('active');
+    });
+    
+    // Show selected view
+    elements[viewName].classList.add('active');
+    currentView = viewName;
+}
+
+function selectTopic(topicId, mode) {
+    currentTopic = topicId;
+    const topic = topicData[topicId];
+    
+    if (mode === 'explain') {
+        elements.explanationTitle.textContent = topic.title;
+        elements.explanationContent.innerHTML = topic.explanation;
+        showView('explanationView');
+        renderMath();
+    } else if (mode === 'quiz') {
+        elements.quizTitle.textContent = `${topic.title} Quiz`;
+        generateQuiz(topic.quiz);
+        showView('quizView');
+        renderMath();
+    }
+}
+
+function generateQuiz(questions) {
+    let html = '';
+    let currentQuestion = 0;
+    let score = 0;
+    let answered = [];
+    
+    function renderQuestion(index) {
+        const question = questions[index];
+        let optionsHtml = '';
+        
+        question.options.forEach((option, i) => {
+            optionsHtml += `
+                <div class="quiz-option" data-option="${i}">
+                    ${option}
+                </div>
+            `;
+        });
+        
+        return `
+            <div class="quiz-question" data-question="${index}">
+                <h3>Question ${index + 1} of ${questions.length}</h3>
+                <p>${question.question}</p>
+                <div class="quiz-options">
+                    ${optionsHtml}
+                </div>
+            </div>
+        `;
+    }
+    
+    function showResults() {
+        html = `
+            <div class="quiz-score">
+                <h3>Quiz Complete!</h3>
+                <p>Your Score: ${score}/${questions.length}</p>
+                <p>Percentage: ${Math.round((score/questions.length) * 100)}%</p>
+                <button class="btn btn-primary" onclick="location.reload()">Take Quiz Again</button>
+            </div>
+        `;
+        elements.quizContent.innerHTML = html;
+    }
+    
+    function nextQuestion() {
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            html = renderQuestion(currentQuestion);
+            html += `
+                <div class="quiz-actions">
+                    <button class="btn btn-outline" onclick="previousQuestion()">Previous</button>
+                    <button class="btn btn-primary" onclick="nextQuestion()" disabled id="nextBtn">Next</button>
+                </div>
+            `;
+            elements.quizContent.innerHTML = html;
+            setupQuizListeners();
+        } else {
+            showResults();
+        }
+    }
+    
+    function previousQuestion() {
+        if (currentQuestion > 0) {
+            currentQuestion--;
+            html = renderQuestion(currentQuestion);
+            html += `
+                <div class="quiz-actions">
+                    ${currentQuestion > 0 ? '<button class="btn btn-outline" onclick="previousQuestion()">Previous</button>' : ''}
+                    <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn">Next</button>
+                </div>
+            `;
+            elements.quizContent.innerHTML = html;
+            setupQuizListeners();
+            
+            // Restore previous answer
+            if (answered[currentQuestion] !== undefined) {
+                const options = document.querySelectorAll('.quiz-option');
+                options[answered[currentQuestion]].classList.add('selected');
+                document.getElementById('nextBtn').disabled = false;
+            }
+        }
+    }
+    
+    function setupQuizListeners() {
+        const options = document.querySelectorAll('.quiz-option');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        options.forEach((option, index) => {
+            option.addEventListener('click', function() {
+                // Remove previous selection
+                options.forEach(opt => opt.classList.remove('selected'));
+                // Add current selection
+                this.classList.add('selected');
+                // Store answer
+                answered[currentQuestion] = index;
+                // Enable next button
+                nextBtn.disabled = false;
+                
+                // Check if correct
+                if (index === questions[currentQuestion].correct) {
+                    if (answered[currentQuestion] === undefined || answered[currentQuestion] !== index) {
+                        score++;
+                    }
+                }
+            });
+        });
+    }
+    
+    // Make functions global
+    window.nextQuestion = nextQuestion;
+    window.previousQuestion = previousQuestion;
+    
+    // Start quiz
+    html = renderQuestion(0);
+    html += `
+        <div class="quiz-actions">
+            <button class="btn btn-primary" onclick="nextQuestion()" disabled id="nextBtn">Next</button>
+        </div>
+    `;
+    
+    elements.quizContent.innerHTML = html;
+    setupQuizListeners();
+}
+
+async function sendMessage() {
+    if (!isAiReady) {
+        showApiKeyModal();
+        return;
+    }
+    
+    const message = elements.chatInput.value.trim();
+    if (!message) return;
+    
+    // Add user message to chat
+    addMessageToChat('user', message);
+    elements.chatInput.value = '';
+    
+    // Show loading state
+    elements.sendMessage.disabled = true;
+    elements.sendText.classList.add('hidden');
+    elements.loadingSpinner.classList.remove('hidden');
+    
+    try {
+        // Make API call to backend
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                question: message,
+                apiKey: apiKey 
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            addMessageToChat('assistant', data.response);
+        } else {
+            addMessageToChat('assistant', data.error || 'Sorry, I encountered an error. Please try again.');
+        }
+    } catch (error) {
+        console.error('API call failed:', error);
+        addMessageToChat('assistant', 'Sorry, I couldn\'t connect to the AI service. Please check your connection and try again.');
+    } finally {
+        // Reset loading state
+        elements.sendMessage.disabled = false;
+        elements.sendText.classList.remove('hidden');
+        elements.loadingSpinner.classList.add('hidden');
+    }
+}
+
+function addMessageToChat(role, content) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${role}`;
+    
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
+    contentDiv.innerHTML = content;
+    
+    messageDiv.appendChild(contentDiv);
+    elements.chatMessages.appendChild(messageDiv);
+    
+    // Scroll to bottom
+    elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+    
+    // Render math in the new message
+    renderMath();
+}
+
+function renderMath() {
+    // Render KaTeX math expressions
+    if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false}
+            ]
+        });
+    }
+}
+
+// Load theme preference
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.body.classList.remove('dark-theme');
+        elements.themeToggle.querySelector('.theme-icon').textContent = '☀️';
+    }
+});
+
+// Make selectTopic global
+window.selectTopic = selectTopic;
